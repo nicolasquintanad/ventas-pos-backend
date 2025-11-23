@@ -1,0 +1,29 @@
+## Visual Studio / .NET
+bin/
+obj/
+Debug/
+Release/
+x64/
+x86/
+*.user
+*.suo
+*.sln.docstates
+
+# NuGet
+packages/
+*.nupkg
+project.lock.json
+
+# Logs & Dumps
+*.log
+*.dmp
+
+# Environment files
+appsettings.Development.json
+appsettings*.local.json
+appsettings*.secret.json
+secrets.json
+
+# Publish folders
+Publish/
+wwwroot/build/

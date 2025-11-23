@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="657d3bb0c8534a7f9f279a58ef109df1" Name="Diagram1">
+        <EntityTypeShape EntityType="AMANDAModel.CAJA" Width="1.5" PointX="3.75" PointY="21" IsExpanded="true" />
+        <EntityTypeShape EntityType="AMANDAModel.DETALLE_PROMOCION" Width="1.5" PointX="5.25" PointY="9.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="AMANDAModel.PACK" Width="1.5" PointX="3" PointY="24.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="AMANDAModel.PACK_DETALLE" Width="1.5" PointX="5.25" PointY="13.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="AMANDAModel.PROMOCION" Width="1.5" PointX="3" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="AMANDAModel.PROVEEDOR" Width="1.5" PointX="3" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="AMANDAModel.TIPO_PRODUCTO" Width="1.5" PointX="0.75" PointY="10" IsExpanded="true" />
+        <EntityTypeShape EntityType="AMANDAModel.TRANSACCION_CAJA" Width="1.5" PointX="8.25" PointY="22.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="AMANDAModel.USUARIO" Width="1.5" PointX="3" PointY="15" IsExpanded="true" />
+        <AssociationConnector Association="AMANDAModel.DETALLE_PROMOCION_PROMOCION_ID_PROMOCION_fk" ManuallyRouted="false" />
+        <AssociationConnector Association="AMANDAModel.PACK_DETALLE_PACK_ID_PACK_fk" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="AMANDAModel.PRODUCTO" Width="1.5" PointX="3" PointY="8.75" />
+        <AssociationConnector Association="AMANDAModel.DETALLE_PROMOCION_PRODUCTO_ID_PRODUCTO_fk" />
+        <AssociationConnector Association="AMANDAModel.PACK_DETALLE_PRODUCTO_ID_PRODUCTO_fk" />
+        <AssociationConnector Association="AMANDAModel.PRODUCTO_TIPO_PRODUCTO_ID_TIPO_PRODUCTO_fk" />
+        <EntityTypeShape EntityType="AMANDAModel.ROL_USUARIO" Width="1.5" PointX="5.25" PointY="6.5" />
+        <AssociationConnector Association="AMANDAModel.ROL_USUARIO_USUARIO_ID_USUARIO_fk" />
+        <EntityTypeShape EntityType="AMANDAModel.ENTRADA_PRODUCTO" Width="1.5" PointX="8.25" PointY="9.25" />
+        <AssociationConnector Association="AMANDAModel.ENTRADA_PRODUCTO_PRODUCTO_ID_PRODUCTO_fk" />
+        <AssociationConnector Association="AMANDAModel.ENTRADA_PRODUCTO_PROVEEDOR_ID_PROVEEDOR_fk" />
+        <AssociationConnector Association="AMANDAModel.ENTRADA_PRODUCTO_USUARIO_ID_USUARIO_fk" />
+        <EntityTypeShape EntityType="AMANDAModel.DETALLE_VENTA" Width="1.5" PointX="11.25" PointY="8.375" />
+        <AssociationConnector Association="AMANDAModel.DETALLE_VENTA_PRODUCTO_ID_PRODUCTO_fk" />
+        <AssociationConnector Association="AMANDAModel.DETALLE_VENTA_PROMOCION_ID_PROMOCION_fk" />
+        <EntityTypeShape EntityType="AMANDAModel.APERTURA_CIERRE" Width="1.5" PointX="9" PointY="17" />
+        <AssociationConnector Association="AMANDAModel.APERTURA_CIERRE_CAJA_ID_CAJA_fk" />
+        <AssociationConnector Association="AMANDAModel.APERTURA_CIERRE_USUARIO_ID_USUARIO_fk" />
+        <AssociationConnector Association="AMANDAModel.TRANSACCION_CAJA_APERTURA_CIERRE_ID_APERTURA_CIERRE_fk" />
+        <EntityTypeShape EntityType="AMANDAModel.HISTORIAL_STOCK" Width="1.5" PointX="5.25" PointY="2.5" />
+        <AssociationConnector Association="AMANDAModel.FK__HISTORIAL__ID_PR__02FC7413" />
+        <EntityTypeShape EntityType="AMANDAModel.VENTA" Width="1.5" PointX="11.25" PointY="17.125" />
+        <AssociationConnector Association="AMANDAModel.VENTA_APERTURA_FK" />
+        <AssociationConnector Association="AMANDAModel.VENTA_CAJA_ID_CAJA_fk" />
+        <AssociationConnector Association="AMANDAModel.DETALLE_VENTA_VENTA_ID_VENTA_fk" />
+        <AssociationConnector Association="AMANDAModel.TRANSACCION_CAJA_VENTA_ID_VENTA_fk" />
+        <AssociationConnector Association="AMANDAModel.VENTA_USUARIO_ID_USUARIO_fk" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

@@ -1,0 +1,1382 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="AMANDAModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="APERTURA_CIERRE">
+          <Key>
+            <PropertyRef Name="ID_APERTURA_CIERRE" />
+          </Key>
+          <Property Name="ID_APERTURA_CIERRE" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FECHA_APERTURA" Type="datetime" />
+          <Property Name="FECHA_CIERRE" Type="datetime" />
+          <Property Name="MONTO_INICIAL" Type="int" />
+          <Property Name="MONTO_FINAL" Type="int" />
+          <Property Name="ACTIVA" Type="bit" />
+          <Property Name="MONTO_CIGARRILLOS" Type="int" />
+          <Property Name="MONTO_EFECTIVO" Type="int" />
+          <Property Name="MONTO_DEBITO" Type="int" />
+          <Property Name="ID_CAJA" Type="int" />
+          <Property Name="ID_USUARIO" Type="int" />
+        </EntityType>
+        <EntityType Name="CAJA">
+          <Key>
+            <PropertyRef Name="ID_CAJA" />
+          </Key>
+          <Property Name="ID_CAJA" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NOMBRE" Type="nvarchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="DETALLE_PROMOCION">
+          <Key>
+            <PropertyRef Name="ID_DETALLE_PROMOCION" />
+          </Key>
+          <Property Name="ID_DETALLE_PROMOCION" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FECHA_CREACION" Type="datetime" />
+          <Property Name="ID_PRODUCTO" Type="int" />
+          <Property Name="ID_PROMOCION" Type="int" />
+          <Property Name="CANTIDAD" Type="int" />
+        </EntityType>
+        <EntityType Name="DETALLE_VENTA">
+          <Key>
+            <PropertyRef Name="ID_DETALLE_VENTA" />
+          </Key>
+          <Property Name="ID_DETALLE_VENTA" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SKU" Type="nvarchar" MaxLength="100" />
+          <Property Name="NOMBRE" Type="nvarchar" MaxLength="100" />
+          <Property Name="CANTIDAD" Type="decimal" Precision="18" Scale="6" />
+          <Property Name="PRECIO_UNITARIO" Type="int" />
+          <Property Name="SUBTOTAL" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="TIENE_PROMOCION" Type="bit" />
+          <Property Name="FECHA_CREACION" Type="datetime" />
+          <Property Name="USUARIO_VENTA" Type="int" />
+          <Property Name="FECHA_UPDATE" Type="datetime" />
+          <Property Name="USUARIO_UPDATE" Type="int" />
+          <Property Name="ID_VENTA" Type="int" />
+          <Property Name="ID_PRODUCTO" Type="int" />
+          <Property Name="ID_PROMOCION" Type="int" />
+          <Property Name="EXCENTO_IVA" Type="bit" />
+        </EntityType>
+        <EntityType Name="ENTRADA_PRODUCTO">
+          <Key>
+            <PropertyRef Name="ID_ENTRADA_PRODUCTO" />
+          </Key>
+          <Property Name="ID_ENTRADA_PRODUCTO" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CANTIDAD" Type="decimal" Precision="18" Scale="6" />
+          <Property Name="FECHA" Type="datetime" />
+          <Property Name="COSTO_UNITARIO" Type="decimal" Precision="10" Scale="2" />
+          <Property Name="ID_USUARIO" Type="int" />
+          <Property Name="ID_PROVEEDOR" Type="int" />
+          <Property Name="ID_PRODUCTO" Type="int" />
+          <Property Name="SKU" Type="nvarchar" MaxLength="100" />
+          <Property Name="ANULADA" Type="bit" />
+        </EntityType>
+        <EntityType Name="HISTORIAL_STOCK">
+          <Key>
+            <PropertyRef Name="ID_HISTORIAL" />
+          </Key>
+          <Property Name="ID_HISTORIAL" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ID_PRODUCTO" Type="int" Nullable="false" />
+          <Property Name="FECHA" Type="datetime" Nullable="false" />
+          <Property Name="TIPO_MOVIMIENTO" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="CANTIDAD" Type="decimal" Precision="18" Scale="6" Nullable="false" />
+          <Property Name="STOCK_ANTERIOR" Type="decimal" Precision="18" Scale="6" Nullable="false" />
+          <Property Name="STOCK_NUEVO" Type="decimal" Precision="18" Scale="6" Nullable="false" />
+          <Property Name="USUARIO" Type="nvarchar" MaxLength="100" />
+          <Property Name="OBSERVACION" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="PACK">
+          <Key>
+            <PropertyRef Name="ID_PACK" />
+          </Key>
+          <Property Name="ID_PACK" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SKU_PACK" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="NOMBRE_PACK" Type="nvarchar" MaxLength="100" />
+          <Property Name="FECHA_CRECION" Type="datetime" />
+          <Property Name="DESCRIPCION" Type="nvarchar" MaxLength="255" />
+          <Property Name="PRECIO_PACK" Type="int" />
+          <Property Name="FECHA_UPDATE" Type="datetime" />
+          <Property Name="USUARIO_CREACION" Type="int" />
+          <Property Name="USUARIO_UPDATE" Type="int" />
+          <Property Name="EXCENTO_IVA" Type="bit" />
+        </EntityType>
+        <EntityType Name="PACK_DETALLE">
+          <Key>
+            <PropertyRef Name="ID_PACKDETALLE" />
+          </Key>
+          <Property Name="ID_PACKDETALLE" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ID_PRODUCTO" Type="int" />
+          <Property Name="ID_PACK" Type="int" />
+          <Property Name="CANTIDAD_PRODUCTO" Type="int" />
+          <Property Name="FECHA_CRECION" Type="datetime" />
+          <Property Name="USUARIO_CREACION" Type="int" />
+          <Property Name="FECHA_UPDATE" Type="datetime" />
+          <Property Name="USUARIO_UPDATE" Type="int" />
+        </EntityType>
+        <EntityType Name="PRODUCTO">
+          <Key>
+            <PropertyRef Name="ID_PRODUCTO" />
+          </Key>
+          <Property Name="ID_PRODUCTO" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SKU" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="NOMBRE" Type="nvarchar" MaxLength="100" />
+          <Property Name="FECHA_CRECION" Type="datetime" />
+          <Property Name="DESCRIPCION" Type="nvarchar" MaxLength="255" />
+          <Property Name="PRECIO" Type="int" />
+          <Property Name="STOCK" Type="decimal" Precision="18" Scale="6" />
+          <Property Name="FECHA_UPDATE" Type="datetime" />
+          <Property Name="USUARIO_CREACION" Type="int" />
+          <Property Name="USUARIO_UPDATE" Type="int" />
+          <Property Name="EXCENTO_IVA" Type="bit" />
+          <Property Name="ID_TIPO_PRODUCTO" Type="int" />
+        </EntityType>
+        <EntityType Name="PROMOCION">
+          <Key>
+            <PropertyRef Name="ID_PROMOCION" />
+          </Key>
+          <Property Name="ID_PROMOCION" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NOMBRE" Type="nvarchar" MaxLength="100" />
+          <Property Name="VALOR" Type="nvarchar" MaxLength="100" />
+          <Property Name="FECHA_CREACION" Type="datetime" />
+        </EntityType>
+        <EntityType Name="PROVEEDOR">
+          <Key>
+            <PropertyRef Name="ID_PROVEEDOR" />
+          </Key>
+          <Property Name="ID_PROVEEDOR" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NOMBRE" Type="nvarchar" MaxLength="100" />
+          <Property Name="TELEFONO" Type="nvarchar" MaxLength="100" />
+          <Property Name="CORREO" Type="nvarchar" MaxLength="100" />
+          <Property Name="DIRECCION" Type="nvarchar" MaxLength="100" />
+          <Property Name="CIUDAD" Type="nvarchar" MaxLength="100" />
+          <Property Name="FECHA_CREACION" Type="datetime" />
+        </EntityType>
+        <EntityType Name="ROL_USUARIO">
+          <Key>
+            <PropertyRef Name="ID_ROL_USUARIO" />
+          </Key>
+          <Property Name="ID_ROL_USUARIO" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NOMBRE" Type="nvarchar" MaxLength="100" />
+          <Property Name="FECHA_CREACION" Type="datetime" />
+          <Property Name="ID_USUARIO" Type="int" />
+          <Property Name="SLUG" Type="nvarchar" MaxLength="20" />
+        </EntityType>
+        <EntityType Name="TIPO_PRODUCTO">
+          <Key>
+            <PropertyRef Name="ID_TIPO_PRODUCTO" />
+          </Key>
+          <Property Name="ID_TIPO_PRODUCTO" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NOMBRE" Type="nvarchar" MaxLength="100" />
+          <Property Name="CIGARRILLO" Type="bit" />
+        </EntityType>
+        <EntityType Name="TRANSACCION_CAJA">
+          <Key>
+            <PropertyRef Name="ID_TRANSACCION_CAJA" />
+          </Key>
+          <Property Name="ID_TRANSACCION_CAJA" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TIPO_TRANSACCION" Type="nvarchar" MaxLength="100" />
+          <Property Name="MONTO" Type="int" />
+          <Property Name="FECHA" Type="datetime" />
+          <Property Name="USUARIO" Type="nvarchar" MaxLength="100" />
+          <Property Name="ID_VENTA" Type="int" />
+          <Property Name="ID_APERTURA_CIERRE" Type="int" />
+        </EntityType>
+        <EntityType Name="USUARIO">
+          <Key>
+            <PropertyRef Name="ID_USUARIO" />
+          </Key>
+          <Property Name="ID_USUARIO" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NOMBRE" Type="nvarchar" MaxLength="100" />
+          <Property Name="CORREO" Type="nvarchar" MaxLength="100" />
+          <Property Name="FECHA_CREACION" Type="datetime" />
+          <Property Name="PASSWORD" Type="nvarchar" MaxLength="255" />
+          <Property Name="USERNAME" Type="nvarchar" MaxLength="50" />
+          <Property Name="RUT" Type="nvarchar" MaxLength="12" />
+          <Property Name="ACTIVO" Type="bit" />
+        </EntityType>
+        <EntityType Name="VENTA">
+          <Key>
+            <PropertyRef Name="ID_VENTA" />
+          </Key>
+          <Property Name="ID_VENTA" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FECHA" Type="datetime" />
+          <Property Name="TOTAL" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="DESCUENTO_APLICADO" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="CONTIENE_CIGARROS" Type="bit" />
+          <Property Name="ID_USUARIO" Type="int" />
+          <Property Name="ID_CAJA" Type="int" />
+          <Property Name="ID_APERTURA_CIERRE" Type="int" />
+        </EntityType>
+        <Association Name="APERTURA_CIERRE_CAJA_ID_CAJA_fk">
+          <End Role="CAJA" Type="Self.CAJA" Multiplicity="0..1" />
+          <End Role="APERTURA_CIERRE" Type="Self.APERTURA_CIERRE" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CAJA">
+              <PropertyRef Name="ID_CAJA" />
+            </Principal>
+            <Dependent Role="APERTURA_CIERRE">
+              <PropertyRef Name="ID_CAJA" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="APERTURA_CIERRE_USUARIO_ID_USUARIO_fk">
+          <End Role="USUARIO" Type="Self.USUARIO" Multiplicity="0..1" />
+          <End Role="APERTURA_CIERRE" Type="Self.APERTURA_CIERRE" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="USUARIO">
+              <PropertyRef Name="ID_USUARIO" />
+            </Principal>
+            <Dependent Role="APERTURA_CIERRE">
+              <PropertyRef Name="ID_USUARIO" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="DETALLE_PROMOCION_PRODUCTO_ID_PRODUCTO_fk">
+          <End Role="PRODUCTO" Type="Self.PRODUCTO" Multiplicity="0..1" />
+          <End Role="DETALLE_PROMOCION" Type="Self.DETALLE_PROMOCION" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PRODUCTO">
+              <PropertyRef Name="ID_PRODUCTO" />
+            </Principal>
+            <Dependent Role="DETALLE_PROMOCION">
+              <PropertyRef Name="ID_PRODUCTO" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="DETALLE_PROMOCION_PROMOCION_ID_PROMOCION_fk">
+          <End Role="PROMOCION" Type="Self.PROMOCION" Multiplicity="0..1" />
+          <End Role="DETALLE_PROMOCION" Type="Self.DETALLE_PROMOCION" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PROMOCION">
+              <PropertyRef Name="ID_PROMOCION" />
+            </Principal>
+            <Dependent Role="DETALLE_PROMOCION">
+              <PropertyRef Name="ID_PROMOCION" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="DETALLE_VENTA_PRODUCTO_ID_PRODUCTO_fk">
+          <End Role="PRODUCTO" Type="Self.PRODUCTO" Multiplicity="0..1" />
+          <End Role="DETALLE_VENTA" Type="Self.DETALLE_VENTA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PRODUCTO">
+              <PropertyRef Name="ID_PRODUCTO" />
+            </Principal>
+            <Dependent Role="DETALLE_VENTA">
+              <PropertyRef Name="ID_PRODUCTO" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="DETALLE_VENTA_PROMOCION_ID_PROMOCION_fk">
+          <End Role="PROMOCION" Type="Self.PROMOCION" Multiplicity="0..1" />
+          <End Role="DETALLE_VENTA" Type="Self.DETALLE_VENTA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PROMOCION">
+              <PropertyRef Name="ID_PROMOCION" />
+            </Principal>
+            <Dependent Role="DETALLE_VENTA">
+              <PropertyRef Name="ID_PROMOCION" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="DETALLE_VENTA_VENTA_ID_VENTA_fk">
+          <End Role="VENTA" Type="Self.VENTA" Multiplicity="0..1" />
+          <End Role="DETALLE_VENTA" Type="Self.DETALLE_VENTA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="VENTA">
+              <PropertyRef Name="ID_VENTA" />
+            </Principal>
+            <Dependent Role="DETALLE_VENTA">
+              <PropertyRef Name="ID_VENTA" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ENTRADA_PRODUCTO_PRODUCTO_ID_PRODUCTO_fk">
+          <End Role="PRODUCTO" Type="Self.PRODUCTO" Multiplicity="0..1" />
+          <End Role="ENTRADA_PRODUCTO" Type="Self.ENTRADA_PRODUCTO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PRODUCTO">
+              <PropertyRef Name="ID_PRODUCTO" />
+            </Principal>
+            <Dependent Role="ENTRADA_PRODUCTO">
+              <PropertyRef Name="ID_PRODUCTO" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ENTRADA_PRODUCTO_PROVEEDOR_ID_PROVEEDOR_fk">
+          <End Role="PROVEEDOR" Type="Self.PROVEEDOR" Multiplicity="0..1" />
+          <End Role="ENTRADA_PRODUCTO" Type="Self.ENTRADA_PRODUCTO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PROVEEDOR">
+              <PropertyRef Name="ID_PROVEEDOR" />
+            </Principal>
+            <Dependent Role="ENTRADA_PRODUCTO">
+              <PropertyRef Name="ID_PROVEEDOR" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ENTRADA_PRODUCTO_USUARIO_ID_USUARIO_fk">
+          <End Role="USUARIO" Type="Self.USUARIO" Multiplicity="0..1" />
+          <End Role="ENTRADA_PRODUCTO" Type="Self.ENTRADA_PRODUCTO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="USUARIO">
+              <PropertyRef Name="ID_USUARIO" />
+            </Principal>
+            <Dependent Role="ENTRADA_PRODUCTO">
+              <PropertyRef Name="ID_USUARIO" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__HISTORIAL__ID_PR__02FC7413">
+          <End Role="PRODUCTO" Type="Self.PRODUCTO" Multiplicity="1" />
+          <End Role="HISTORIAL_STOCK" Type="Self.HISTORIAL_STOCK" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PRODUCTO">
+              <PropertyRef Name="ID_PRODUCTO" />
+            </Principal>
+            <Dependent Role="HISTORIAL_STOCK">
+              <PropertyRef Name="ID_PRODUCTO" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="PACK_DETALLE_PACK_ID_PACK_fk">
+          <End Role="PACK" Type="Self.PACK" Multiplicity="0..1" />
+          <End Role="PACK_DETALLE" Type="Self.PACK_DETALLE" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PACK">
+              <PropertyRef Name="ID_PACK" />
+            </Principal>
+            <Dependent Role="PACK_DETALLE">
+              <PropertyRef Name="ID_PACK" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="PACK_DETALLE_PRODUCTO_ID_PRODUCTO_fk">
+          <End Role="PRODUCTO" Type="Self.PRODUCTO" Multiplicity="0..1" />
+          <End Role="PACK_DETALLE" Type="Self.PACK_DETALLE" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PRODUCTO">
+              <PropertyRef Name="ID_PRODUCTO" />
+            </Principal>
+            <Dependent Role="PACK_DETALLE">
+              <PropertyRef Name="ID_PRODUCTO" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="PRODUCTO_TIPO_PRODUCTO_ID_TIPO_PRODUCTO_fk">
+          <End Role="TIPO_PRODUCTO" Type="Self.TIPO_PRODUCTO" Multiplicity="0..1" />
+          <End Role="PRODUCTO" Type="Self.PRODUCTO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TIPO_PRODUCTO">
+              <PropertyRef Name="ID_TIPO_PRODUCTO" />
+            </Principal>
+            <Dependent Role="PRODUCTO">
+              <PropertyRef Name="ID_TIPO_PRODUCTO" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ROL_USUARIO_USUARIO_ID_USUARIO_fk">
+          <End Role="USUARIO" Type="Self.USUARIO" Multiplicity="0..1" />
+          <End Role="ROL_USUARIO" Type="Self.ROL_USUARIO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="USUARIO">
+              <PropertyRef Name="ID_USUARIO" />
+            </Principal>
+            <Dependent Role="ROL_USUARIO">
+              <PropertyRef Name="ID_USUARIO" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="TRANSACCION_CAJA_APERTURA_CIERRE_ID_APERTURA_CIERRE_fk">
+          <End Role="APERTURA_CIERRE" Type="Self.APERTURA_CIERRE" Multiplicity="0..1" />
+          <End Role="TRANSACCION_CAJA" Type="Self.TRANSACCION_CAJA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="APERTURA_CIERRE">
+              <PropertyRef Name="ID_APERTURA_CIERRE" />
+            </Principal>
+            <Dependent Role="TRANSACCION_CAJA">
+              <PropertyRef Name="ID_APERTURA_CIERRE" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="TRANSACCION_CAJA_VENTA_ID_VENTA_fk">
+          <End Role="VENTA" Type="Self.VENTA" Multiplicity="0..1" />
+          <End Role="TRANSACCION_CAJA" Type="Self.TRANSACCION_CAJA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="VENTA">
+              <PropertyRef Name="ID_VENTA" />
+            </Principal>
+            <Dependent Role="TRANSACCION_CAJA">
+              <PropertyRef Name="ID_VENTA" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="VENTA_APERTURA_FK">
+          <End Role="APERTURA_CIERRE" Type="Self.APERTURA_CIERRE" Multiplicity="0..1" />
+          <End Role="VENTA" Type="Self.VENTA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="APERTURA_CIERRE">
+              <PropertyRef Name="ID_APERTURA_CIERRE" />
+            </Principal>
+            <Dependent Role="VENTA">
+              <PropertyRef Name="ID_APERTURA_CIERRE" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="VENTA_CAJA_ID_CAJA_fk">
+          <End Role="CAJA" Type="Self.CAJA" Multiplicity="0..1" />
+          <End Role="VENTA" Type="Self.VENTA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CAJA">
+              <PropertyRef Name="ID_CAJA" />
+            </Principal>
+            <Dependent Role="VENTA">
+              <PropertyRef Name="ID_CAJA" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="VENTA_USUARIO_ID_USUARIO_fk">
+          <End Role="USUARIO" Type="Self.USUARIO" Multiplicity="0..1" />
+          <End Role="VENTA" Type="Self.VENTA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="USUARIO">
+              <PropertyRef Name="ID_USUARIO" />
+            </Principal>
+            <Dependent Role="VENTA">
+              <PropertyRef Name="ID_USUARIO" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="AMANDAModelStoreContainer">
+          <EntitySet Name="APERTURA_CIERRE" EntityType="Self.APERTURA_CIERRE" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CAJA" EntityType="Self.CAJA" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DETALLE_PROMOCION" EntityType="Self.DETALLE_PROMOCION" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DETALLE_VENTA" EntityType="Self.DETALLE_VENTA" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ENTRADA_PRODUCTO" EntityType="Self.ENTRADA_PRODUCTO" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="HISTORIAL_STOCK" EntityType="Self.HISTORIAL_STOCK" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PACK" EntityType="Self.PACK" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PACK_DETALLE" EntityType="Self.PACK_DETALLE" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PRODUCTO" EntityType="Self.PRODUCTO" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PROMOCION" EntityType="Self.PROMOCION" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PROVEEDOR" EntityType="Self.PROVEEDOR" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ROL_USUARIO" EntityType="Self.ROL_USUARIO" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TIPO_PRODUCTO" EntityType="Self.TIPO_PRODUCTO" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TRANSACCION_CAJA" EntityType="Self.TRANSACCION_CAJA" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="USUARIO" EntityType="Self.USUARIO" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="VENTA" EntityType="Self.VENTA" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="APERTURA_CIERRE_CAJA_ID_CAJA_fk" Association="Self.APERTURA_CIERRE_CAJA_ID_CAJA_fk">
+            <End Role="CAJA" EntitySet="CAJA" />
+            <End Role="APERTURA_CIERRE" EntitySet="APERTURA_CIERRE" />
+          </AssociationSet>
+          <AssociationSet Name="APERTURA_CIERRE_USUARIO_ID_USUARIO_fk" Association="Self.APERTURA_CIERRE_USUARIO_ID_USUARIO_fk">
+            <End Role="USUARIO" EntitySet="USUARIO" />
+            <End Role="APERTURA_CIERRE" EntitySet="APERTURA_CIERRE" />
+          </AssociationSet>
+          <AssociationSet Name="DETALLE_PROMOCION_PRODUCTO_ID_PRODUCTO_fk" Association="Self.DETALLE_PROMOCION_PRODUCTO_ID_PRODUCTO_fk">
+            <End Role="PRODUCTO" EntitySet="PRODUCTO" />
+            <End Role="DETALLE_PROMOCION" EntitySet="DETALLE_PROMOCION" />
+          </AssociationSet>
+          <AssociationSet Name="DETALLE_PROMOCION_PROMOCION_ID_PROMOCION_fk" Association="Self.DETALLE_PROMOCION_PROMOCION_ID_PROMOCION_fk">
+            <End Role="PROMOCION" EntitySet="PROMOCION" />
+            <End Role="DETALLE_PROMOCION" EntitySet="DETALLE_PROMOCION" />
+          </AssociationSet>
+          <AssociationSet Name="DETALLE_VENTA_PRODUCTO_ID_PRODUCTO_fk" Association="Self.DETALLE_VENTA_PRODUCTO_ID_PRODUCTO_fk">
+            <End Role="PRODUCTO" EntitySet="PRODUCTO" />
+            <End Role="DETALLE_VENTA" EntitySet="DETALLE_VENTA" />
+          </AssociationSet>
+          <AssociationSet Name="DETALLE_VENTA_PROMOCION_ID_PROMOCION_fk" Association="Self.DETALLE_VENTA_PROMOCION_ID_PROMOCION_fk">
+            <End Role="PROMOCION" EntitySet="PROMOCION" />
+            <End Role="DETALLE_VENTA" EntitySet="DETALLE_VENTA" />
+          </AssociationSet>
+          <AssociationSet Name="DETALLE_VENTA_VENTA_ID_VENTA_fk" Association="Self.DETALLE_VENTA_VENTA_ID_VENTA_fk">
+            <End Role="VENTA" EntitySet="VENTA" />
+            <End Role="DETALLE_VENTA" EntitySet="DETALLE_VENTA" />
+          </AssociationSet>
+          <AssociationSet Name="ENTRADA_PRODUCTO_PRODUCTO_ID_PRODUCTO_fk" Association="Self.ENTRADA_PRODUCTO_PRODUCTO_ID_PRODUCTO_fk">
+            <End Role="PRODUCTO" EntitySet="PRODUCTO" />
+            <End Role="ENTRADA_PRODUCTO" EntitySet="ENTRADA_PRODUCTO" />
+          </AssociationSet>
+          <AssociationSet Name="ENTRADA_PRODUCTO_PROVEEDOR_ID_PROVEEDOR_fk" Association="Self.ENTRADA_PRODUCTO_PROVEEDOR_ID_PROVEEDOR_fk">
+            <End Role="PROVEEDOR" EntitySet="PROVEEDOR" />
+            <End Role="ENTRADA_PRODUCTO" EntitySet="ENTRADA_PRODUCTO" />
+          </AssociationSet>
+          <AssociationSet Name="ENTRADA_PRODUCTO_USUARIO_ID_USUARIO_fk" Association="Self.ENTRADA_PRODUCTO_USUARIO_ID_USUARIO_fk">
+            <End Role="USUARIO" EntitySet="USUARIO" />
+            <End Role="ENTRADA_PRODUCTO" EntitySet="ENTRADA_PRODUCTO" />
+          </AssociationSet>
+          <AssociationSet Name="FK__HISTORIAL__ID_PR__02FC7413" Association="Self.FK__HISTORIAL__ID_PR__02FC7413">
+            <End Role="PRODUCTO" EntitySet="PRODUCTO" />
+            <End Role="HISTORIAL_STOCK" EntitySet="HISTORIAL_STOCK" />
+          </AssociationSet>
+          <AssociationSet Name="PACK_DETALLE_PACK_ID_PACK_fk" Association="Self.PACK_DETALLE_PACK_ID_PACK_fk">
+            <End Role="PACK" EntitySet="PACK" />
+            <End Role="PACK_DETALLE" EntitySet="PACK_DETALLE" />
+          </AssociationSet>
+          <AssociationSet Name="PACK_DETALLE_PRODUCTO_ID_PRODUCTO_fk" Association="Self.PACK_DETALLE_PRODUCTO_ID_PRODUCTO_fk">
+            <End Role="PRODUCTO" EntitySet="PRODUCTO" />
+            <End Role="PACK_DETALLE" EntitySet="PACK_DETALLE" />
+          </AssociationSet>
+          <AssociationSet Name="PRODUCTO_TIPO_PRODUCTO_ID_TIPO_PRODUCTO_fk" Association="Self.PRODUCTO_TIPO_PRODUCTO_ID_TIPO_PRODUCTO_fk">
+            <End Role="TIPO_PRODUCTO" EntitySet="TIPO_PRODUCTO" />
+            <End Role="PRODUCTO" EntitySet="PRODUCTO" />
+          </AssociationSet>
+          <AssociationSet Name="ROL_USUARIO_USUARIO_ID_USUARIO_fk" Association="Self.ROL_USUARIO_USUARIO_ID_USUARIO_fk">
+            <End Role="USUARIO" EntitySet="USUARIO" />
+            <End Role="ROL_USUARIO" EntitySet="ROL_USUARIO" />
+          </AssociationSet>
+          <AssociationSet Name="TRANSACCION_CAJA_APERTURA_CIERRE_ID_APERTURA_CIERRE_fk" Association="Self.TRANSACCION_CAJA_APERTURA_CIERRE_ID_APERTURA_CIERRE_fk">
+            <End Role="APERTURA_CIERRE" EntitySet="APERTURA_CIERRE" />
+            <End Role="TRANSACCION_CAJA" EntitySet="TRANSACCION_CAJA" />
+          </AssociationSet>
+          <AssociationSet Name="TRANSACCION_CAJA_VENTA_ID_VENTA_fk" Association="Self.TRANSACCION_CAJA_VENTA_ID_VENTA_fk">
+            <End Role="VENTA" EntitySet="VENTA" />
+            <End Role="TRANSACCION_CAJA" EntitySet="TRANSACCION_CAJA" />
+          </AssociationSet>
+          <AssociationSet Name="VENTA_APERTURA_FK" Association="Self.VENTA_APERTURA_FK">
+            <End Role="APERTURA_CIERRE" EntitySet="APERTURA_CIERRE" />
+            <End Role="VENTA" EntitySet="VENTA" />
+          </AssociationSet>
+          <AssociationSet Name="VENTA_CAJA_ID_CAJA_fk" Association="Self.VENTA_CAJA_ID_CAJA_fk">
+            <End Role="CAJA" EntitySet="CAJA" />
+            <End Role="VENTA" EntitySet="VENTA" />
+          </AssociationSet>
+          <AssociationSet Name="VENTA_USUARIO_ID_USUARIO_fk" Association="Self.VENTA_USUARIO_ID_USUARIO_fk">
+            <End Role="USUARIO" EntitySet="USUARIO" />
+            <End Role="VENTA" EntitySet="VENTA" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="AMANDAModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="CAJA">
+          <Key>
+            <PropertyRef Name="ID_CAJA" />
+          </Key>
+          <Property Name="ID_CAJA" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NOMBRE" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="APERTURA_CIERRE" Relationship="AMANDAModel.APERTURA_CIERRE_CAJA_ID_CAJA_fk" FromRole="CAJA" ToRole="APERTURA_CIERRE" />
+          <NavigationProperty Name="VENTA" Relationship="AMANDAModel.VENTA_CAJA_ID_CAJA_fk" FromRole="CAJA" ToRole="VENTA" />
+        </EntityType>
+        <EntityType Name="DETALLE_PROMOCION">
+          <Key>
+            <PropertyRef Name="ID_DETALLE_PROMOCION" />
+          </Key>
+          <Property Name="ID_DETALLE_PROMOCION" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FECHA_CREACION" Type="DateTime" Precision="3" />
+          <Property Name="ID_PRODUCTO" Type="Int32" />
+          <Property Name="ID_PROMOCION" Type="Int32" />
+          <Property Name="CANTIDAD" Type="Int32" />
+          <NavigationProperty Name="PROMOCION" Relationship="Self.DETALLE_PROMOCION_PROMOCION_ID_PROMOCION_fk" FromRole="DETALLE_PROMOCION" ToRole="PROMOCION" />
+          <NavigationProperty Name="PRODUCTO" Relationship="AMANDAModel.DETALLE_PROMOCION_PRODUCTO_ID_PRODUCTO_fk" FromRole="DETALLE_PROMOCION" ToRole="PRODUCTO" />
+        </EntityType>
+        <EntityType Name="PACK">
+          <Key>
+            <PropertyRef Name="ID_PACK" />
+          </Key>
+          <Property Name="ID_PACK" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SKU_PACK" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="NOMBRE_PACK" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="FECHA_CRECION" Type="DateTime" Precision="3" />
+          <Property Name="DESCRIPCION" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="PRECIO_PACK" Type="Int32" />
+          <Property Name="FECHA_UPDATE" Type="DateTime" Precision="3" />
+          <Property Name="USUARIO_CREACION" Type="Int32" />
+          <Property Name="USUARIO_UPDATE" Type="Int32" />
+          <Property Name="EXCENTO_IVA" Type="Boolean" />
+          <NavigationProperty Name="PACK_DETALLE" Relationship="Self.PACK_DETALLE_PACK_ID_PACK_fk" FromRole="PACK" ToRole="PACK_DETALLE" />
+        </EntityType>
+        <EntityType Name="PACK_DETALLE">
+          <Key>
+            <PropertyRef Name="ID_PACKDETALLE" />
+          </Key>
+          <Property Name="ID_PACKDETALLE" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ID_PRODUCTO" Type="Int32" />
+          <Property Name="ID_PACK" Type="Int32" />
+          <Property Name="CANTIDAD_PRODUCTO" Type="Int32" />
+          <Property Name="FECHA_CRECION" Type="DateTime" Precision="3" />
+          <Property Name="USUARIO_CREACION" Type="Int32" />
+          <Property Name="FECHA_UPDATE" Type="DateTime" Precision="3" />
+          <Property Name="USUARIO_UPDATE" Type="Int32" />
+          <NavigationProperty Name="PACK" Relationship="Self.PACK_DETALLE_PACK_ID_PACK_fk" FromRole="PACK_DETALLE" ToRole="PACK" />
+          <NavigationProperty Name="PRODUCTO" Relationship="AMANDAModel.PACK_DETALLE_PRODUCTO_ID_PRODUCTO_fk" FromRole="PACK_DETALLE" ToRole="PRODUCTO" />
+        </EntityType>
+        <EntityType Name="PROMOCION">
+          <Key>
+            <PropertyRef Name="ID_PROMOCION" />
+          </Key>
+          <Property Name="ID_PROMOCION" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NOMBRE" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="VALOR" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="FECHA_CREACION" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="DETALLE_PROMOCION" Relationship="Self.DETALLE_PROMOCION_PROMOCION_ID_PROMOCION_fk" FromRole="PROMOCION" ToRole="DETALLE_PROMOCION" />
+          <NavigationProperty Name="DETALLE_VENTA" Relationship="AMANDAModel.DETALLE_VENTA_PROMOCION_ID_PROMOCION_fk" FromRole="PROMOCION" ToRole="DETALLE_VENTA" />
+        </EntityType>
+        <EntityType Name="PROVEEDOR">
+          <Key>
+            <PropertyRef Name="ID_PROVEEDOR" />
+          </Key>
+          <Property Name="ID_PROVEEDOR" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NOMBRE" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="TELEFONO" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="CORREO" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="DIRECCION" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="CIUDAD" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="FECHA_CREACION" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="ENTRADA_PRODUCTO" Relationship="AMANDAModel.ENTRADA_PRODUCTO_PROVEEDOR_ID_PROVEEDOR_fk" FromRole="PROVEEDOR" ToRole="ENTRADA_PRODUCTO" />
+        </EntityType>
+        <EntityType Name="TIPO_PRODUCTO">
+          <Key>
+            <PropertyRef Name="ID_TIPO_PRODUCTO" />
+          </Key>
+          <Property Name="ID_TIPO_PRODUCTO" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NOMBRE" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="CIGARRILLO" Type="Boolean" />
+          <NavigationProperty Name="PRODUCTO" Relationship="AMANDAModel.PRODUCTO_TIPO_PRODUCTO_ID_TIPO_PRODUCTO_fk" FromRole="TIPO_PRODUCTO" ToRole="PRODUCTO" />
+        </EntityType>
+        <EntityType Name="TRANSACCION_CAJA">
+          <Key>
+            <PropertyRef Name="ID_TRANSACCION_CAJA" />
+          </Key>
+          <Property Name="ID_TRANSACCION_CAJA" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TIPO_TRANSACCION" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="MONTO" Type="Int32" />
+          <Property Name="FECHA" Type="DateTime" Precision="3" />
+          <Property Name="USUARIO" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="ID_VENTA" Type="Int32" />
+          <Property Name="ID_APERTURA_CIERRE" Type="Int32" />
+          <NavigationProperty Name="APERTURA_CIERRE" Relationship="AMANDAModel.TRANSACCION_CAJA_APERTURA_CIERRE_ID_APERTURA_CIERRE_fk" FromRole="TRANSACCION_CAJA" ToRole="APERTURA_CIERRE" />
+          <NavigationProperty Name="VENTA" Relationship="AMANDAModel.TRANSACCION_CAJA_VENTA_ID_VENTA_fk" FromRole="TRANSACCION_CAJA" ToRole="VENTA" />
+        </EntityType>
+        <EntityType Name="USUARIO">
+          <Key>
+            <PropertyRef Name="ID_USUARIO" />
+          </Key>
+          <Property Name="ID_USUARIO" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NOMBRE" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="CORREO" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="FECHA_CREACION" Type="DateTime" Precision="3" />
+          <Property Name="PASSWORD" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="USERNAME" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="RUT" Type="String" MaxLength="12" FixedLength="false" Unicode="true" />
+          <Property Name="ACTIVO" Type="Boolean" />
+          <NavigationProperty Name="ROL_USUARIO" Relationship="AMANDAModel.ROL_USUARIO_USUARIO_ID_USUARIO_fk" FromRole="USUARIO" ToRole="ROL_USUARIO" />
+          <NavigationProperty Name="ENTRADA_PRODUCTO" Relationship="AMANDAModel.ENTRADA_PRODUCTO_USUARIO_ID_USUARIO_fk" FromRole="USUARIO" ToRole="ENTRADA_PRODUCTO" />
+          <NavigationProperty Name="APERTURA_CIERRE" Relationship="AMANDAModel.APERTURA_CIERRE_USUARIO_ID_USUARIO_fk" FromRole="USUARIO" ToRole="APERTURA_CIERRE" />
+          <NavigationProperty Name="VENTA" Relationship="AMANDAModel.VENTA_USUARIO_ID_USUARIO_fk" FromRole="USUARIO" ToRole="VENTA" />
+        </EntityType>
+        <Association Name="DETALLE_PROMOCION_PROMOCION_ID_PROMOCION_fk">
+          <End Role="PROMOCION" Type="Self.PROMOCION" Multiplicity="0..1" />
+          <End Role="DETALLE_PROMOCION" Type="Self.DETALLE_PROMOCION" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PROMOCION">
+              <PropertyRef Name="ID_PROMOCION" />
+            </Principal>
+            <Dependent Role="DETALLE_PROMOCION">
+              <PropertyRef Name="ID_PROMOCION" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="PACK_DETALLE_PACK_ID_PACK_fk">
+          <End Role="PACK" Type="Self.PACK" Multiplicity="0..1" />
+          <End Role="PACK_DETALLE" Type="Self.PACK_DETALLE" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PACK">
+              <PropertyRef Name="ID_PACK" />
+            </Principal>
+            <Dependent Role="PACK_DETALLE">
+              <PropertyRef Name="ID_PACK" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="AMANDAEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="CAJA" EntityType="Self.CAJA" />
+          <EntitySet Name="DETALLE_PROMOCION" EntityType="Self.DETALLE_PROMOCION" />
+          <EntitySet Name="PACK" EntityType="Self.PACK" />
+          <EntitySet Name="PACK_DETALLE" EntityType="Self.PACK_DETALLE" />
+          <EntitySet Name="PROMOCION" EntityType="Self.PROMOCION" />
+          <EntitySet Name="PROVEEDOR" EntityType="Self.PROVEEDOR" />
+          <EntitySet Name="TIPO_PRODUCTO" EntityType="Self.TIPO_PRODUCTO" />
+          <EntitySet Name="TRANSACCION_CAJA" EntityType="Self.TRANSACCION_CAJA" />
+          <EntitySet Name="USUARIO" EntityType="Self.USUARIO" />
+          <AssociationSet Name="DETALLE_PROMOCION_PROMOCION_ID_PROMOCION_fk" Association="Self.DETALLE_PROMOCION_PROMOCION_ID_PROMOCION_fk">
+            <End Role="PROMOCION" EntitySet="PROMOCION" />
+            <End Role="DETALLE_PROMOCION" EntitySet="DETALLE_PROMOCION" />
+          </AssociationSet>
+          <AssociationSet Name="PACK_DETALLE_PACK_ID_PACK_fk" Association="Self.PACK_DETALLE_PACK_ID_PACK_fk">
+            <End Role="PACK" EntitySet="PACK" />
+            <End Role="PACK_DETALLE" EntitySet="PACK_DETALLE" />
+          </AssociationSet>
+          <EntitySet Name="PRODUCTO" EntityType="AMANDAModel.PRODUCTO" />
+          <AssociationSet Name="DETALLE_PROMOCION_PRODUCTO_ID_PRODUCTO_fk" Association="AMANDAModel.DETALLE_PROMOCION_PRODUCTO_ID_PRODUCTO_fk">
+            <End Role="PRODUCTO" EntitySet="PRODUCTO" />
+            <End Role="DETALLE_PROMOCION" EntitySet="DETALLE_PROMOCION" />
+          </AssociationSet>
+          <AssociationSet Name="PACK_DETALLE_PRODUCTO_ID_PRODUCTO_fk" Association="AMANDAModel.PACK_DETALLE_PRODUCTO_ID_PRODUCTO_fk">
+            <End Role="PRODUCTO" EntitySet="PRODUCTO" />
+            <End Role="PACK_DETALLE" EntitySet="PACK_DETALLE" />
+          </AssociationSet>
+          <AssociationSet Name="PRODUCTO_TIPO_PRODUCTO_ID_TIPO_PRODUCTO_fk" Association="AMANDAModel.PRODUCTO_TIPO_PRODUCTO_ID_TIPO_PRODUCTO_fk">
+            <End Role="TIPO_PRODUCTO" EntitySet="TIPO_PRODUCTO" />
+            <End Role="PRODUCTO" EntitySet="PRODUCTO" />
+          </AssociationSet>
+          <EntitySet Name="ROL_USUARIO" EntityType="AMANDAModel.ROL_USUARIO" />
+          <AssociationSet Name="ROL_USUARIO_USUARIO_ID_USUARIO_fk" Association="AMANDAModel.ROL_USUARIO_USUARIO_ID_USUARIO_fk">
+            <End Role="USUARIO" EntitySet="USUARIO" />
+            <End Role="ROL_USUARIO" EntitySet="ROL_USUARIO" />
+          </AssociationSet>
+          <EntitySet Name="ENTRADA_PRODUCTO" EntityType="AMANDAModel.ENTRADA_PRODUCTO" />
+          <AssociationSet Name="ENTRADA_PRODUCTO_PRODUCTO_ID_PRODUCTO_fk" Association="AMANDAModel.ENTRADA_PRODUCTO_PRODUCTO_ID_PRODUCTO_fk">
+            <End Role="PRODUCTO" EntitySet="PRODUCTO" />
+            <End Role="ENTRADA_PRODUCTO" EntitySet="ENTRADA_PRODUCTO" />
+          </AssociationSet>
+          <AssociationSet Name="ENTRADA_PRODUCTO_PROVEEDOR_ID_PROVEEDOR_fk" Association="AMANDAModel.ENTRADA_PRODUCTO_PROVEEDOR_ID_PROVEEDOR_fk">
+            <End Role="PROVEEDOR" EntitySet="PROVEEDOR" />
+            <End Role="ENTRADA_PRODUCTO" EntitySet="ENTRADA_PRODUCTO" />
+          </AssociationSet>
+          <AssociationSet Name="ENTRADA_PRODUCTO_USUARIO_ID_USUARIO_fk" Association="AMANDAModel.ENTRADA_PRODUCTO_USUARIO_ID_USUARIO_fk">
+            <End Role="USUARIO" EntitySet="USUARIO" />
+            <End Role="ENTRADA_PRODUCTO" EntitySet="ENTRADA_PRODUCTO" />
+          </AssociationSet>
+          <EntitySet Name="DETALLE_VENTA" EntityType="AMANDAModel.DETALLE_VENTA" />
+          <AssociationSet Name="DETALLE_VENTA_PRODUCTO_ID_PRODUCTO_fk" Association="AMANDAModel.DETALLE_VENTA_PRODUCTO_ID_PRODUCTO_fk">
+            <End Role="PRODUCTO" EntitySet="PRODUCTO" />
+            <End Role="DETALLE_VENTA" EntitySet="DETALLE_VENTA" />
+          </AssociationSet>
+          <AssociationSet Name="DETALLE_VENTA_PROMOCION_ID_PROMOCION_fk" Association="AMANDAModel.DETALLE_VENTA_PROMOCION_ID_PROMOCION_fk">
+            <End Role="PROMOCION" EntitySet="PROMOCION" />
+            <End Role="DETALLE_VENTA" EntitySet="DETALLE_VENTA" />
+          </AssociationSet>
+          <EntitySet Name="APERTURA_CIERRE" EntityType="AMANDAModel.APERTURA_CIERRE" />
+          <AssociationSet Name="APERTURA_CIERRE_CAJA_ID_CAJA_fk" Association="AMANDAModel.APERTURA_CIERRE_CAJA_ID_CAJA_fk">
+            <End Role="CAJA" EntitySet="CAJA" />
+            <End Role="APERTURA_CIERRE" EntitySet="APERTURA_CIERRE" />
+          </AssociationSet>
+          <AssociationSet Name="APERTURA_CIERRE_USUARIO_ID_USUARIO_fk" Association="AMANDAModel.APERTURA_CIERRE_USUARIO_ID_USUARIO_fk">
+            <End Role="USUARIO" EntitySet="USUARIO" />
+            <End Role="APERTURA_CIERRE" EntitySet="APERTURA_CIERRE" />
+          </AssociationSet>
+          <AssociationSet Name="TRANSACCION_CAJA_APERTURA_CIERRE_ID_APERTURA_CIERRE_fk" Association="AMANDAModel.TRANSACCION_CAJA_APERTURA_CIERRE_ID_APERTURA_CIERRE_fk">
+            <End Role="APERTURA_CIERRE" EntitySet="APERTURA_CIERRE" />
+            <End Role="TRANSACCION_CAJA" EntitySet="TRANSACCION_CAJA" />
+          </AssociationSet>
+          <EntitySet Name="HISTORIAL_STOCK" EntityType="AMANDAModel.HISTORIAL_STOCK" />
+          <AssociationSet Name="FK__HISTORIAL__ID_PR__02FC7413" Association="AMANDAModel.FK__HISTORIAL__ID_PR__02FC7413">
+            <End Role="PRODUCTO" EntitySet="PRODUCTO" />
+            <End Role="HISTORIAL_STOCK" EntitySet="HISTORIAL_STOCK" />
+          </AssociationSet>
+          <EntitySet Name="VENTA" EntityType="AMANDAModel.VENTA" />
+          <AssociationSet Name="VENTA_APERTURA_FK" Association="AMANDAModel.VENTA_APERTURA_FK">
+            <End Role="APERTURA_CIERRE" EntitySet="APERTURA_CIERRE" />
+            <End Role="VENTA" EntitySet="VENTA" />
+          </AssociationSet>
+          <AssociationSet Name="VENTA_CAJA_ID_CAJA_fk" Association="AMANDAModel.VENTA_CAJA_ID_CAJA_fk">
+            <End Role="CAJA" EntitySet="CAJA" />
+            <End Role="VENTA" EntitySet="VENTA" />
+          </AssociationSet>
+          <AssociationSet Name="DETALLE_VENTA_VENTA_ID_VENTA_fk" Association="AMANDAModel.DETALLE_VENTA_VENTA_ID_VENTA_fk">
+            <End Role="VENTA" EntitySet="VENTA" />
+            <End Role="DETALLE_VENTA" EntitySet="DETALLE_VENTA" />
+          </AssociationSet>
+          <AssociationSet Name="TRANSACCION_CAJA_VENTA_ID_VENTA_fk" Association="AMANDAModel.TRANSACCION_CAJA_VENTA_ID_VENTA_fk">
+            <End Role="VENTA" EntitySet="VENTA" />
+            <End Role="TRANSACCION_CAJA" EntitySet="TRANSACCION_CAJA" />
+          </AssociationSet>
+          <AssociationSet Name="VENTA_USUARIO_ID_USUARIO_fk" Association="AMANDAModel.VENTA_USUARIO_ID_USUARIO_fk">
+            <End Role="USUARIO" EntitySet="USUARIO" />
+            <End Role="VENTA" EntitySet="VENTA" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="PRODUCTO">
+          <Key>
+            <PropertyRef Name="ID_PRODUCTO" />
+          </Key>
+          <Property Name="ID_PRODUCTO" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SKU" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="NOMBRE" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="FECHA_CRECION" Type="DateTime" Precision="3" />
+          <Property Name="DESCRIPCION" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="PRECIO" Type="Int32" />
+          <Property Name="STOCK" Type="Decimal" Precision="18" Scale="6" />
+          <Property Name="FECHA_UPDATE" Type="DateTime" Precision="3" />
+          <Property Name="USUARIO_CREACION" Type="Int32" />
+          <Property Name="USUARIO_UPDATE" Type="Int32" />
+          <Property Name="EXCENTO_IVA" Type="Boolean" />
+          <Property Name="ID_TIPO_PRODUCTO" Type="Int32" />
+          <NavigationProperty Name="DETALLE_PROMOCION" Relationship="AMANDAModel.DETALLE_PROMOCION_PRODUCTO_ID_PRODUCTO_fk" FromRole="PRODUCTO" ToRole="DETALLE_PROMOCION" />
+          <NavigationProperty Name="PACK_DETALLE" Relationship="AMANDAModel.PACK_DETALLE_PRODUCTO_ID_PRODUCTO_fk" FromRole="PRODUCTO" ToRole="PACK_DETALLE" />
+          <NavigationProperty Name="TIPO_PRODUCTO" Relationship="AMANDAModel.PRODUCTO_TIPO_PRODUCTO_ID_TIPO_PRODUCTO_fk" FromRole="PRODUCTO" ToRole="TIPO_PRODUCTO" />
+          <NavigationProperty Name="ENTRADA_PRODUCTO" Relationship="AMANDAModel.ENTRADA_PRODUCTO_PRODUCTO_ID_PRODUCTO_fk" FromRole="PRODUCTO" ToRole="ENTRADA_PRODUCTO" />
+          <NavigationProperty Name="DETALLE_VENTA" Relationship="AMANDAModel.DETALLE_VENTA_PRODUCTO_ID_PRODUCTO_fk" FromRole="PRODUCTO" ToRole="DETALLE_VENTA" />
+          <NavigationProperty Name="HISTORIAL_STOCK" Relationship="AMANDAModel.FK__HISTORIAL__ID_PR__02FC7413" FromRole="PRODUCTO" ToRole="HISTORIAL_STOCK" />
+        </EntityType>
+        <Association Name="DETALLE_PROMOCION_PRODUCTO_ID_PRODUCTO_fk">
+          <End Type="AMANDAModel.PRODUCTO" Role="PRODUCTO" Multiplicity="0..1" />
+          <End Type="AMANDAModel.DETALLE_PROMOCION" Role="DETALLE_PROMOCION" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PRODUCTO">
+              <PropertyRef Name="ID_PRODUCTO" />
+            </Principal>
+            <Dependent Role="DETALLE_PROMOCION">
+              <PropertyRef Name="ID_PRODUCTO" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="PACK_DETALLE_PRODUCTO_ID_PRODUCTO_fk">
+          <End Type="AMANDAModel.PRODUCTO" Role="PRODUCTO" Multiplicity="0..1" />
+          <End Type="AMANDAModel.PACK_DETALLE" Role="PACK_DETALLE" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PRODUCTO">
+              <PropertyRef Name="ID_PRODUCTO" />
+            </Principal>
+            <Dependent Role="PACK_DETALLE">
+              <PropertyRef Name="ID_PRODUCTO" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="PRODUCTO_TIPO_PRODUCTO_ID_TIPO_PRODUCTO_fk">
+          <End Type="AMANDAModel.TIPO_PRODUCTO" Role="TIPO_PRODUCTO" Multiplicity="0..1" />
+          <End Type="AMANDAModel.PRODUCTO" Role="PRODUCTO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TIPO_PRODUCTO">
+              <PropertyRef Name="ID_TIPO_PRODUCTO" />
+            </Principal>
+            <Dependent Role="PRODUCTO">
+              <PropertyRef Name="ID_TIPO_PRODUCTO" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="ROL_USUARIO">
+          <Key>
+            <PropertyRef Name="ID_ROL_USUARIO" />
+          </Key>
+          <Property Name="ID_ROL_USUARIO" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NOMBRE" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="FECHA_CREACION" Type="DateTime" Precision="3" />
+          <Property Name="ID_USUARIO" Type="Int32" />
+          <Property Name="SLUG" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="USUARIO" Relationship="AMANDAModel.ROL_USUARIO_USUARIO_ID_USUARIO_fk" FromRole="ROL_USUARIO" ToRole="USUARIO" />
+        </EntityType>
+        <Association Name="ROL_USUARIO_USUARIO_ID_USUARIO_fk">
+          <End Type="AMANDAModel.USUARIO" Role="USUARIO" Multiplicity="0..1" />
+          <End Type="AMANDAModel.ROL_USUARIO" Role="ROL_USUARIO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="USUARIO">
+              <PropertyRef Name="ID_USUARIO" />
+            </Principal>
+            <Dependent Role="ROL_USUARIO">
+              <PropertyRef Name="ID_USUARIO" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="ENTRADA_PRODUCTO">
+          <Key>
+            <PropertyRef Name="ID_ENTRADA_PRODUCTO" />
+          </Key>
+          <Property Name="ID_ENTRADA_PRODUCTO" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CANTIDAD" Type="Decimal" Precision="18" Scale="6" />
+          <Property Name="FECHA" Type="DateTime" Precision="3" />
+          <Property Name="COSTO_UNITARIO" Type="Decimal" Precision="10" Scale="2" />
+          <Property Name="ID_USUARIO" Type="Int32" />
+          <Property Name="ID_PROVEEDOR" Type="Int32" />
+          <Property Name="ID_PRODUCTO" Type="Int32" />
+          <Property Name="SKU" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="ANULADA" Type="Boolean" />
+          <NavigationProperty Name="PRODUCTO" Relationship="AMANDAModel.ENTRADA_PRODUCTO_PRODUCTO_ID_PRODUCTO_fk" FromRole="ENTRADA_PRODUCTO" ToRole="PRODUCTO" />
+          <NavigationProperty Name="PROVEEDOR" Relationship="AMANDAModel.ENTRADA_PRODUCTO_PROVEEDOR_ID_PROVEEDOR_fk" FromRole="ENTRADA_PRODUCTO" ToRole="PROVEEDOR" />
+          <NavigationProperty Name="USUARIO" Relationship="AMANDAModel.ENTRADA_PRODUCTO_USUARIO_ID_USUARIO_fk" FromRole="ENTRADA_PRODUCTO" ToRole="USUARIO" />
+        </EntityType>
+        <Association Name="ENTRADA_PRODUCTO_PRODUCTO_ID_PRODUCTO_fk">
+          <End Type="AMANDAModel.PRODUCTO" Role="PRODUCTO" Multiplicity="0..1" />
+          <End Type="AMANDAModel.ENTRADA_PRODUCTO" Role="ENTRADA_PRODUCTO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PRODUCTO">
+              <PropertyRef Name="ID_PRODUCTO" />
+            </Principal>
+            <Dependent Role="ENTRADA_PRODUCTO">
+              <PropertyRef Name="ID_PRODUCTO" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ENTRADA_PRODUCTO_PROVEEDOR_ID_PROVEEDOR_fk">
+          <End Type="AMANDAModel.PROVEEDOR" Role="PROVEEDOR" Multiplicity="0..1" />
+          <End Type="AMANDAModel.ENTRADA_PRODUCTO" Role="ENTRADA_PRODUCTO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PROVEEDOR">
+              <PropertyRef Name="ID_PROVEEDOR" />
+            </Principal>
+            <Dependent Role="ENTRADA_PRODUCTO">
+              <PropertyRef Name="ID_PROVEEDOR" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="ENTRADA_PRODUCTO_USUARIO_ID_USUARIO_fk">
+          <End Type="AMANDAModel.USUARIO" Role="USUARIO" Multiplicity="0..1" />
+          <End Type="AMANDAModel.ENTRADA_PRODUCTO" Role="ENTRADA_PRODUCTO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="USUARIO">
+              <PropertyRef Name="ID_USUARIO" />
+            </Principal>
+            <Dependent Role="ENTRADA_PRODUCTO">
+              <PropertyRef Name="ID_USUARIO" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="DETALLE_VENTA">
+          <Key>
+            <PropertyRef Name="ID_DETALLE_VENTA" />
+          </Key>
+          <Property Name="ID_DETALLE_VENTA" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SKU" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="NOMBRE" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="CANTIDAD" Type="Decimal" Precision="18" Scale="6" />
+          <Property Name="PRECIO_UNITARIO" Type="Int32" />
+          <Property Name="SUBTOTAL" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="TIENE_PROMOCION" Type="Boolean" />
+          <Property Name="FECHA_CREACION" Type="DateTime" Precision="3" />
+          <Property Name="USUARIO_VENTA" Type="Int32" />
+          <Property Name="FECHA_UPDATE" Type="DateTime" Precision="3" />
+          <Property Name="USUARIO_UPDATE" Type="Int32" />
+          <Property Name="ID_VENTA" Type="Int32" />
+          <Property Name="ID_PRODUCTO" Type="Int32" />
+          <Property Name="ID_PROMOCION" Type="Int32" />
+          <Property Name="EXCENTO_IVA" Type="Boolean" />
+          <NavigationProperty Name="PRODUCTO" Relationship="AMANDAModel.DETALLE_VENTA_PRODUCTO_ID_PRODUCTO_fk" FromRole="DETALLE_VENTA" ToRole="PRODUCTO" />
+          <NavigationProperty Name="PROMOCION" Relationship="AMANDAModel.DETALLE_VENTA_PROMOCION_ID_PROMOCION_fk" FromRole="DETALLE_VENTA" ToRole="PROMOCION" />
+          <NavigationProperty Name="VENTA" Relationship="AMANDAModel.DETALLE_VENTA_VENTA_ID_VENTA_fk" FromRole="DETALLE_VENTA" ToRole="VENTA" />
+        </EntityType>
+        <Association Name="DETALLE_VENTA_PRODUCTO_ID_PRODUCTO_fk">
+          <End Type="AMANDAModel.PRODUCTO" Role="PRODUCTO" Multiplicity="0..1" />
+          <End Type="AMANDAModel.DETALLE_VENTA" Role="DETALLE_VENTA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PRODUCTO">
+              <PropertyRef Name="ID_PRODUCTO" />
+            </Principal>
+            <Dependent Role="DETALLE_VENTA">
+              <PropertyRef Name="ID_PRODUCTO" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="DETALLE_VENTA_PROMOCION_ID_PROMOCION_fk">
+          <End Type="AMANDAModel.PROMOCION" Role="PROMOCION" Multiplicity="0..1" />
+          <End Type="AMANDAModel.DETALLE_VENTA" Role="DETALLE_VENTA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PROMOCION">
+              <PropertyRef Name="ID_PROMOCION" />
+            </Principal>
+            <Dependent Role="DETALLE_VENTA">
+              <PropertyRef Name="ID_PROMOCION" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="APERTURA_CIERRE">
+          <Key>
+            <PropertyRef Name="ID_APERTURA_CIERRE" />
+          </Key>
+          <Property Name="ID_APERTURA_CIERRE" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FECHA_APERTURA" Type="DateTime" Precision="3" />
+          <Property Name="FECHA_CIERRE" Type="DateTime" Precision="3" />
+          <Property Name="MONTO_INICIAL" Type="Int32" />
+          <Property Name="MONTO_FINAL" Type="Int32" />
+          <Property Name="ACTIVA" Type="Boolean" />
+          <Property Name="MONTO_CIGARRILLOS" Type="Int32" />
+          <Property Name="MONTO_EFECTIVO" Type="Int32" />
+          <Property Name="MONTO_DEBITO" Type="Int32" />
+          <Property Name="ID_CAJA" Type="Int32" />
+          <Property Name="ID_USUARIO" Type="Int32" />
+          <NavigationProperty Name="CAJA" Relationship="AMANDAModel.APERTURA_CIERRE_CAJA_ID_CAJA_fk" FromRole="APERTURA_CIERRE" ToRole="CAJA" />
+          <NavigationProperty Name="USUARIO" Relationship="AMANDAModel.APERTURA_CIERRE_USUARIO_ID_USUARIO_fk" FromRole="APERTURA_CIERRE" ToRole="USUARIO" />
+          <NavigationProperty Name="TRANSACCION_CAJA" Relationship="AMANDAModel.TRANSACCION_CAJA_APERTURA_CIERRE_ID_APERTURA_CIERRE_fk" FromRole="APERTURA_CIERRE" ToRole="TRANSACCION_CAJA" />
+          <NavigationProperty Name="VENTA" Relationship="AMANDAModel.VENTA_APERTURA_FK" FromRole="APERTURA_CIERRE" ToRole="VENTA" />
+        </EntityType>
+        <Association Name="APERTURA_CIERRE_CAJA_ID_CAJA_fk">
+          <End Type="AMANDAModel.CAJA" Role="CAJA" Multiplicity="0..1" />
+          <End Type="AMANDAModel.APERTURA_CIERRE" Role="APERTURA_CIERRE" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CAJA">
+              <PropertyRef Name="ID_CAJA" />
+            </Principal>
+            <Dependent Role="APERTURA_CIERRE">
+              <PropertyRef Name="ID_CAJA" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="APERTURA_CIERRE_USUARIO_ID_USUARIO_fk">
+          <End Type="AMANDAModel.USUARIO" Role="USUARIO" Multiplicity="0..1" />
+          <End Type="AMANDAModel.APERTURA_CIERRE" Role="APERTURA_CIERRE" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="USUARIO">
+              <PropertyRef Name="ID_USUARIO" />
+            </Principal>
+            <Dependent Role="APERTURA_CIERRE">
+              <PropertyRef Name="ID_USUARIO" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="TRANSACCION_CAJA_APERTURA_CIERRE_ID_APERTURA_CIERRE_fk">
+          <End Type="AMANDAModel.APERTURA_CIERRE" Role="APERTURA_CIERRE" Multiplicity="0..1" />
+          <End Type="AMANDAModel.TRANSACCION_CAJA" Role="TRANSACCION_CAJA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="APERTURA_CIERRE">
+              <PropertyRef Name="ID_APERTURA_CIERRE" />
+            </Principal>
+            <Dependent Role="TRANSACCION_CAJA">
+              <PropertyRef Name="ID_APERTURA_CIERRE" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="HISTORIAL_STOCK">
+          <Key>
+            <PropertyRef Name="ID_HISTORIAL" />
+          </Key>
+          <Property Name="ID_HISTORIAL" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ID_PRODUCTO" Type="Int32" Nullable="false" />
+          <Property Name="FECHA" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="TIPO_MOVIMIENTO" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="CANTIDAD" Type="Decimal" Nullable="false" Precision="18" Scale="6" />
+          <Property Name="STOCK_ANTERIOR" Type="Decimal" Nullable="false" Precision="18" Scale="6" />
+          <Property Name="STOCK_NUEVO" Type="Decimal" Nullable="false" Precision="18" Scale="6" />
+          <Property Name="USUARIO" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="OBSERVACION" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="PRODUCTO" Relationship="AMANDAModel.FK__HISTORIAL__ID_PR__02FC7413" FromRole="HISTORIAL_STOCK" ToRole="PRODUCTO" />
+        </EntityType>
+        <Association Name="FK__HISTORIAL__ID_PR__02FC7413">
+          <End Type="AMANDAModel.PRODUCTO" Role="PRODUCTO" Multiplicity="1" />
+          <End Type="AMANDAModel.HISTORIAL_STOCK" Role="HISTORIAL_STOCK" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PRODUCTO">
+              <PropertyRef Name="ID_PRODUCTO" />
+            </Principal>
+            <Dependent Role="HISTORIAL_STOCK">
+              <PropertyRef Name="ID_PRODUCTO" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="VENTA">
+          <Key>
+            <PropertyRef Name="ID_VENTA" />
+          </Key>
+          <Property Name="ID_VENTA" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FECHA" Type="DateTime" Precision="3" />
+          <Property Name="TOTAL" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="DESCUENTO_APLICADO" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="CONTIENE_CIGARROS" Type="Boolean" />
+          <Property Name="ID_USUARIO" Type="Int32" />
+          <Property Name="ID_CAJA" Type="Int32" />
+          <Property Name="ID_APERTURA_CIERRE" Type="Int32" />
+          <NavigationProperty Name="APERTURA_CIERRE" Relationship="AMANDAModel.VENTA_APERTURA_FK" FromRole="VENTA" ToRole="APERTURA_CIERRE" />
+          <NavigationProperty Name="CAJA" Relationship="AMANDAModel.VENTA_CAJA_ID_CAJA_fk" FromRole="VENTA" ToRole="CAJA" />
+          <NavigationProperty Name="DETALLE_VENTA" Relationship="AMANDAModel.DETALLE_VENTA_VENTA_ID_VENTA_fk" FromRole="VENTA" ToRole="DETALLE_VENTA" />
+          <NavigationProperty Name="TRANSACCION_CAJA" Relationship="AMANDAModel.TRANSACCION_CAJA_VENTA_ID_VENTA_fk" FromRole="VENTA" ToRole="TRANSACCION_CAJA" />
+          <NavigationProperty Name="USUARIO" Relationship="AMANDAModel.VENTA_USUARIO_ID_USUARIO_fk" FromRole="VENTA" ToRole="USUARIO" />
+        </EntityType>
+        <Association Name="VENTA_APERTURA_FK">
+          <End Type="AMANDAModel.APERTURA_CIERRE" Role="APERTURA_CIERRE" Multiplicity="0..1" />
+          <End Type="AMANDAModel.VENTA" Role="VENTA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="APERTURA_CIERRE">
+              <PropertyRef Name="ID_APERTURA_CIERRE" />
+            </Principal>
+            <Dependent Role="VENTA">
+              <PropertyRef Name="ID_APERTURA_CIERRE" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="VENTA_CAJA_ID_CAJA_fk">
+          <End Type="AMANDAModel.CAJA" Role="CAJA" Multiplicity="0..1" />
+          <End Type="AMANDAModel.VENTA" Role="VENTA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CAJA">
+              <PropertyRef Name="ID_CAJA" />
+            </Principal>
+            <Dependent Role="VENTA">
+              <PropertyRef Name="ID_CAJA" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="DETALLE_VENTA_VENTA_ID_VENTA_fk">
+          <End Type="AMANDAModel.VENTA" Role="VENTA" Multiplicity="0..1" />
+          <End Type="AMANDAModel.DETALLE_VENTA" Role="DETALLE_VENTA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="VENTA">
+              <PropertyRef Name="ID_VENTA" />
+            </Principal>
+            <Dependent Role="DETALLE_VENTA">
+              <PropertyRef Name="ID_VENTA" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="TRANSACCION_CAJA_VENTA_ID_VENTA_fk">
+          <End Type="AMANDAModel.VENTA" Role="VENTA" Multiplicity="0..1" />
+          <End Type="AMANDAModel.TRANSACCION_CAJA" Role="TRANSACCION_CAJA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="VENTA">
+              <PropertyRef Name="ID_VENTA" />
+            </Principal>
+            <Dependent Role="TRANSACCION_CAJA">
+              <PropertyRef Name="ID_VENTA" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="VENTA_USUARIO_ID_USUARIO_fk">
+          <End Type="AMANDAModel.USUARIO" Role="USUARIO" Multiplicity="0..1" />
+          <End Type="AMANDAModel.VENTA" Role="VENTA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="USUARIO">
+              <PropertyRef Name="ID_USUARIO" />
+            </Principal>
+            <Dependent Role="VENTA">
+              <PropertyRef Name="ID_USUARIO" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="AMANDAModelStoreContainer" CdmEntityContainer="AMANDAEntities">
+          <EntitySetMapping Name="CAJA">
+            <EntityTypeMapping TypeName="AMANDAModel.CAJA">
+              <MappingFragment StoreEntitySet="CAJA">
+                <ScalarProperty Name="ID_CAJA" ColumnName="ID_CAJA" />
+                <ScalarProperty Name="NOMBRE" ColumnName="NOMBRE" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DETALLE_PROMOCION">
+            <EntityTypeMapping TypeName="AMANDAModel.DETALLE_PROMOCION">
+              <MappingFragment StoreEntitySet="DETALLE_PROMOCION">
+                <ScalarProperty Name="ID_DETALLE_PROMOCION" ColumnName="ID_DETALLE_PROMOCION" />
+                <ScalarProperty Name="FECHA_CREACION" ColumnName="FECHA_CREACION" />
+                <ScalarProperty Name="ID_PRODUCTO" ColumnName="ID_PRODUCTO" />
+                <ScalarProperty Name="ID_PROMOCION" ColumnName="ID_PROMOCION" />
+                <ScalarProperty Name="CANTIDAD" ColumnName="CANTIDAD" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PACK">
+            <EntityTypeMapping TypeName="AMANDAModel.PACK">
+              <MappingFragment StoreEntitySet="PACK">
+                <ScalarProperty Name="ID_PACK" ColumnName="ID_PACK" />
+                <ScalarProperty Name="SKU_PACK" ColumnName="SKU_PACK" />
+                <ScalarProperty Name="NOMBRE_PACK" ColumnName="NOMBRE_PACK" />
+                <ScalarProperty Name="FECHA_CRECION" ColumnName="FECHA_CRECION" />
+                <ScalarProperty Name="DESCRIPCION" ColumnName="DESCRIPCION" />
+                <ScalarProperty Name="PRECIO_PACK" ColumnName="PRECIO_PACK" />
+                <ScalarProperty Name="FECHA_UPDATE" ColumnName="FECHA_UPDATE" />
+                <ScalarProperty Name="USUARIO_CREACION" ColumnName="USUARIO_CREACION" />
+                <ScalarProperty Name="USUARIO_UPDATE" ColumnName="USUARIO_UPDATE" />
+                <ScalarProperty Name="EXCENTO_IVA" ColumnName="EXCENTO_IVA" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PACK_DETALLE">
+            <EntityTypeMapping TypeName="AMANDAModel.PACK_DETALLE">
+              <MappingFragment StoreEntitySet="PACK_DETALLE">
+                <ScalarProperty Name="ID_PACKDETALLE" ColumnName="ID_PACKDETALLE" />
+                <ScalarProperty Name="ID_PRODUCTO" ColumnName="ID_PRODUCTO" />
+                <ScalarProperty Name="ID_PACK" ColumnName="ID_PACK" />
+                <ScalarProperty Name="CANTIDAD_PRODUCTO" ColumnName="CANTIDAD_PRODUCTO" />
+                <ScalarProperty Name="FECHA_CRECION" ColumnName="FECHA_CRECION" />
+                <ScalarProperty Name="USUARIO_CREACION" ColumnName="USUARIO_CREACION" />
+                <ScalarProperty Name="FECHA_UPDATE" ColumnName="FECHA_UPDATE" />
+                <ScalarProperty Name="USUARIO_UPDATE" ColumnName="USUARIO_UPDATE" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PROMOCION">
+            <EntityTypeMapping TypeName="AMANDAModel.PROMOCION">
+              <MappingFragment StoreEntitySet="PROMOCION">
+                <ScalarProperty Name="ID_PROMOCION" ColumnName="ID_PROMOCION" />
+                <ScalarProperty Name="NOMBRE" ColumnName="NOMBRE" />
+                <ScalarProperty Name="VALOR" ColumnName="VALOR" />
+                <ScalarProperty Name="FECHA_CREACION" ColumnName="FECHA_CREACION" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PROVEEDOR">
+            <EntityTypeMapping TypeName="AMANDAModel.PROVEEDOR">
+              <MappingFragment StoreEntitySet="PROVEEDOR">
+                <ScalarProperty Name="ID_PROVEEDOR" ColumnName="ID_PROVEEDOR" />
+                <ScalarProperty Name="NOMBRE" ColumnName="NOMBRE" />
+                <ScalarProperty Name="TELEFONO" ColumnName="TELEFONO" />
+                <ScalarProperty Name="CORREO" ColumnName="CORREO" />
+                <ScalarProperty Name="DIRECCION" ColumnName="DIRECCION" />
+                <ScalarProperty Name="CIUDAD" ColumnName="CIUDAD" />
+                <ScalarProperty Name="FECHA_CREACION" ColumnName="FECHA_CREACION" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TIPO_PRODUCTO">
+            <EntityTypeMapping TypeName="AMANDAModel.TIPO_PRODUCTO">
+              <MappingFragment StoreEntitySet="TIPO_PRODUCTO">
+                <ScalarProperty Name="ID_TIPO_PRODUCTO" ColumnName="ID_TIPO_PRODUCTO" />
+                <ScalarProperty Name="NOMBRE" ColumnName="NOMBRE" />
+                <ScalarProperty Name="CIGARRILLO" ColumnName="CIGARRILLO" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TRANSACCION_CAJA">
+            <EntityTypeMapping TypeName="AMANDAModel.TRANSACCION_CAJA">
+              <MappingFragment StoreEntitySet="TRANSACCION_CAJA">
+                <ScalarProperty Name="ID_TRANSACCION_CAJA" ColumnName="ID_TRANSACCION_CAJA" />
+                <ScalarProperty Name="TIPO_TRANSACCION" ColumnName="TIPO_TRANSACCION" />
+                <ScalarProperty Name="MONTO" ColumnName="MONTO" />
+                <ScalarProperty Name="FECHA" ColumnName="FECHA" />
+                <ScalarProperty Name="USUARIO" ColumnName="USUARIO" />
+                <ScalarProperty Name="ID_VENTA" ColumnName="ID_VENTA" />
+                <ScalarProperty Name="ID_APERTURA_CIERRE" ColumnName="ID_APERTURA_CIERRE" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="USUARIO">
+            <EntityTypeMapping TypeName="AMANDAModel.USUARIO">
+              <MappingFragment StoreEntitySet="USUARIO">
+                <ScalarProperty Name="ID_USUARIO" ColumnName="ID_USUARIO" />
+                <ScalarProperty Name="NOMBRE" ColumnName="NOMBRE" />
+                <ScalarProperty Name="CORREO" ColumnName="CORREO" />
+                <ScalarProperty Name="FECHA_CREACION" ColumnName="FECHA_CREACION" />
+                <ScalarProperty Name="PASSWORD" ColumnName="PASSWORD" />
+                <ScalarProperty Name="USERNAME" ColumnName="USERNAME" />
+                <ScalarProperty Name="RUT" ColumnName="RUT" />
+                <ScalarProperty Name="ACTIVO" ColumnName="ACTIVO" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PRODUCTO">
+            <EntityTypeMapping TypeName="AMANDAModel.PRODUCTO">
+              <MappingFragment StoreEntitySet="PRODUCTO">
+                <ScalarProperty Name="ID_TIPO_PRODUCTO" ColumnName="ID_TIPO_PRODUCTO" />
+                <ScalarProperty Name="EXCENTO_IVA" ColumnName="EXCENTO_IVA" />
+                <ScalarProperty Name="USUARIO_UPDATE" ColumnName="USUARIO_UPDATE" />
+                <ScalarProperty Name="USUARIO_CREACION" ColumnName="USUARIO_CREACION" />
+                <ScalarProperty Name="FECHA_UPDATE" ColumnName="FECHA_UPDATE" />
+                <ScalarProperty Name="STOCK" ColumnName="STOCK" />
+                <ScalarProperty Name="PRECIO" ColumnName="PRECIO" />
+                <ScalarProperty Name="DESCRIPCION" ColumnName="DESCRIPCION" />
+                <ScalarProperty Name="FECHA_CRECION" ColumnName="FECHA_CRECION" />
+                <ScalarProperty Name="NOMBRE" ColumnName="NOMBRE" />
+                <ScalarProperty Name="SKU" ColumnName="SKU" />
+                <ScalarProperty Name="ID_PRODUCTO" ColumnName="ID_PRODUCTO" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ROL_USUARIO">
+            <EntityTypeMapping TypeName="AMANDAModel.ROL_USUARIO">
+              <MappingFragment StoreEntitySet="ROL_USUARIO">
+                <ScalarProperty Name="SLUG" ColumnName="SLUG" />
+                <ScalarProperty Name="ID_USUARIO" ColumnName="ID_USUARIO" />
+                <ScalarProperty Name="FECHA_CREACION" ColumnName="FECHA_CREACION" />
+                <ScalarProperty Name="NOMBRE" ColumnName="NOMBRE" />
+                <ScalarProperty Name="ID_ROL_USUARIO" ColumnName="ID_ROL_USUARIO" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ENTRADA_PRODUCTO">
+            <EntityTypeMapping TypeName="AMANDAModel.ENTRADA_PRODUCTO">
+              <MappingFragment StoreEntitySet="ENTRADA_PRODUCTO">
+                <ScalarProperty Name="ANULADA" ColumnName="ANULADA" />
+                <ScalarProperty Name="SKU" ColumnName="SKU" />
+                <ScalarProperty Name="ID_PRODUCTO" ColumnName="ID_PRODUCTO" />
+                <ScalarProperty Name="ID_PROVEEDOR" ColumnName="ID_PROVEEDOR" />
+                <ScalarProperty Name="ID_USUARIO" ColumnName="ID_USUARIO" />
+                <ScalarProperty Name="COSTO_UNITARIO" ColumnName="COSTO_UNITARIO" />
+                <ScalarProperty Name="FECHA" ColumnName="FECHA" />
+                <ScalarProperty Name="CANTIDAD" ColumnName="CANTIDAD" />
+                <ScalarProperty Name="ID_ENTRADA_PRODUCTO" ColumnName="ID_ENTRADA_PRODUCTO" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DETALLE_VENTA">
+            <EntityTypeMapping TypeName="AMANDAModel.DETALLE_VENTA">
+              <MappingFragment StoreEntitySet="DETALLE_VENTA">
+                <ScalarProperty Name="EXCENTO_IVA" ColumnName="EXCENTO_IVA" />
+                <ScalarProperty Name="ID_PROMOCION" ColumnName="ID_PROMOCION" />
+                <ScalarProperty Name="ID_PRODUCTO" ColumnName="ID_PRODUCTO" />
+                <ScalarProperty Name="ID_VENTA" ColumnName="ID_VENTA" />
+                <ScalarProperty Name="USUARIO_UPDATE" ColumnName="USUARIO_UPDATE" />
+                <ScalarProperty Name="FECHA_UPDATE" ColumnName="FECHA_UPDATE" />
+                <ScalarProperty Name="USUARIO_VENTA" ColumnName="USUARIO_VENTA" />
+                <ScalarProperty Name="FECHA_CREACION" ColumnName="FECHA_CREACION" />
+                <ScalarProperty Name="TIENE_PROMOCION" ColumnName="TIENE_PROMOCION" />
+                <ScalarProperty Name="SUBTOTAL" ColumnName="SUBTOTAL" />
+                <ScalarProperty Name="PRECIO_UNITARIO" ColumnName="PRECIO_UNITARIO" />
+                <ScalarProperty Name="CANTIDAD" ColumnName="CANTIDAD" />
+                <ScalarProperty Name="NOMBRE" ColumnName="NOMBRE" />
+                <ScalarProperty Name="SKU" ColumnName="SKU" />
+                <ScalarProperty Name="ID_DETALLE_VENTA" ColumnName="ID_DETALLE_VENTA" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="APERTURA_CIERRE">
+            <EntityTypeMapping TypeName="AMANDAModel.APERTURA_CIERRE">
+              <MappingFragment StoreEntitySet="APERTURA_CIERRE">
+                <ScalarProperty Name="ID_USUARIO" ColumnName="ID_USUARIO" />
+                <ScalarProperty Name="ID_CAJA" ColumnName="ID_CAJA" />
+                <ScalarProperty Name="MONTO_DEBITO" ColumnName="MONTO_DEBITO" />
+                <ScalarProperty Name="MONTO_EFECTIVO" ColumnName="MONTO_EFECTIVO" />
+                <ScalarProperty Name="MONTO_CIGARRILLOS" ColumnName="MONTO_CIGARRILLOS" />
+                <ScalarProperty Name="ACTIVA" ColumnName="ACTIVA" />
+                <ScalarProperty Name="MONTO_FINAL" ColumnName="MONTO_FINAL" />
+                <ScalarProperty Name="MONTO_INICIAL" ColumnName="MONTO_INICIAL" />
+                <ScalarProperty Name="FECHA_CIERRE" ColumnName="FECHA_CIERRE" />
+                <ScalarProperty Name="FECHA_APERTURA" ColumnName="FECHA_APERTURA" />
+                <ScalarProperty Name="ID_APERTURA_CIERRE" ColumnName="ID_APERTURA_CIERRE" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="HISTORIAL_STOCK">
+            <EntityTypeMapping TypeName="AMANDAModel.HISTORIAL_STOCK">
+              <MappingFragment StoreEntitySet="HISTORIAL_STOCK">
+                <ScalarProperty Name="OBSERVACION" ColumnName="OBSERVACION" />
+                <ScalarProperty Name="USUARIO" ColumnName="USUARIO" />
+                <ScalarProperty Name="STOCK_NUEVO" ColumnName="STOCK_NUEVO" />
+                <ScalarProperty Name="STOCK_ANTERIOR" ColumnName="STOCK_ANTERIOR" />
+                <ScalarProperty Name="CANTIDAD" ColumnName="CANTIDAD" />
+                <ScalarProperty Name="TIPO_MOVIMIENTO" ColumnName="TIPO_MOVIMIENTO" />
+                <ScalarProperty Name="FECHA" ColumnName="FECHA" />
+                <ScalarProperty Name="ID_PRODUCTO" ColumnName="ID_PRODUCTO" />
+                <ScalarProperty Name="ID_HISTORIAL" ColumnName="ID_HISTORIAL" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="VENTA">
+            <EntityTypeMapping TypeName="AMANDAModel.VENTA">
+              <MappingFragment StoreEntitySet="VENTA">
+                <ScalarProperty Name="ID_APERTURA_CIERRE" ColumnName="ID_APERTURA_CIERRE" />
+                <ScalarProperty Name="ID_CAJA" ColumnName="ID_CAJA" />
+                <ScalarProperty Name="ID_USUARIO" ColumnName="ID_USUARIO" />
+                <ScalarProperty Name="CONTIENE_CIGARROS" ColumnName="CONTIENE_CIGARROS" />
+                <ScalarProperty Name="DESCUENTO_APLICADO" ColumnName="DESCUENTO_APLICADO" />
+                <ScalarProperty Name="TOTAL" ColumnName="TOTAL" />
+                <ScalarProperty Name="FECHA" ColumnName="FECHA" />
+                <ScalarProperty Name="ID_VENTA" ColumnName="ID_VENTA" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="true" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Ninguno" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
