@@ -26,7 +26,17 @@ namespace api_amanda.Controllers
 
             using (var db = new AMANDAEntities())
             {
-                var skuGenerado = GenerarSkuPack(db);
+                var skuGenerado = "";
+                if (string.IsNullOrWhiteSpace(dto.SKU_PACK))
+                {
+                    skuGenerado = GenerarSkuPack(db);
+                }
+                else
+                {
+                    skuGenerado = dto.SKU_PACK;
+                }
+
+                //var skuGenerado = GenerarSkuPack(db);
 
                 var nuevoPack = new PACK
                 {
@@ -73,7 +83,18 @@ namespace api_amanda.Controllers
                         p.NOMBRE_PACK,
                         p.PRECIO_PACK,
                         p.EXCENTO_IVA,
-                        typeName="pack"
+                        typeName = "pack",
+
+                // 🔥 STOCK DEL PACK (mínimo de los productos que lo componen)
+                STOCK_PACK = db.PACK_DETALLE
+                            .Where(d => d.ID_PACK == p.ID_PACK)
+                            .Select(d => (int?)(
+                                db.PRODUCTO
+                                    .Where(pr => pr.ID_PRODUCTO == d.ID_PRODUCTO)
+                                    .Select(pr => pr.STOCK)
+                                    .FirstOrDefault() / d.CANTIDAD_PRODUCTO
+                            ))
+                            .Min() ?? 0
                     })
                     .OrderBy(p => p.NOMBRE_PACK)
                     .ToList();

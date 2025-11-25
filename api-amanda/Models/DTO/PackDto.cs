@@ -7,6 +7,7 @@ namespace api_amanda.Models.DTO
 {
     public class PackDto
     {
+        public string SKU_PACK { get; set; }
         public string NOMBRE_PACK { get; set; }
         public int PRECIO_PACK { get; set; }
         public bool EXCENTO_IVA { get; set; }

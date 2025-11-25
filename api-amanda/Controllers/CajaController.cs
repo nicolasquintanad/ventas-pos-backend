@@ -114,14 +114,60 @@ namespace api_amanda.Controllers
 
                 db.SaveChanges();
 
-                var montoCigarros = db.VENTA
-    .Where(v => v.ID_CAJA == apertura.ID_CAJA
-             && v.FECHA >= apertura.FECHA_APERTURA
-             && v.FECHA <= fechaAhora
-             && v.CONTIENE_CIGARROS == true)
-    .Sum(v => (int?)v.TOTAL) ?? 0;
+                var montoCigarros = db.DETALLE_VENTA
+                    .Where(d => d.VENTA.ID_APERTURA_CIERRE == apertura.ID_APERTURA_CIERRE
+                     && d.ID_PRODUCTO != null
+                     && d.PRODUCTO.TIPO_PRODUCTO.NOMBRE == "Cigarros")
+                    .Sum(d => (decimal?)d.SUBTOTAL) ?? 0;
+
+                var montoProductos = (totalVentas - (int)montoCigarros);
+
+                // TOTAL PRODUCTOS (sin cigarrillos)
+                //var montoProductos = db.DETALLE_VENTA
+                //    .Where(d => d.VENTA.ID_APERTURA_CIERRE == apertura.ID_APERTURA_CIERRE
+                //             && d.ID_PRODUCTO != null
+                //             && d.PRODUCTO.TIPO_PRODUCTO.NOMBRE.ToLower() != "cigarrillos")
+                //    .Sum(d => (decimal?)(d.CANTIDAD * d.PRECIO_UNITARIO)) ?? 0;
+
+                var totalGeneral = montoCigarros + montoProductos;
 
                 // RESPUESTA
+                //return Ok(new
+                //{
+                //    message = "Caja cerrada correctamente",
+                //    idAperturaCierre = apertura.ID_APERTURA_CIERRE,
+                //    caja = apertura.CAJA.NOMBRE,
+                //    fechaApertura = apertura.FECHA_APERTURA,
+                //    fechaCierre = apertura.FECHA_CIERRE,
+                //    montoInicial = apertura.MONTO_INICIAL,
+                //    totalVentas = totalVentas,
+                //    montoFinal = montoFinal,
+                //    montoCigarros = montoCigarros,
+
+
+                //    // Extras interesantes para mostrar en impresión o PDF
+                //    usuario = db.USUARIO.Where(u => u.ID_USUARIO == apertura.ID_USUARIO).Select(u => u.NOMBRE).FirstOrDefault(),
+                //    totalTransacciones = db.VENTA
+                //        .Where(v => v.ID_CAJA == apertura.ID_CAJA
+                //                 && v.FECHA >= apertura.FECHA_APERTURA
+                //                 && v.FECHA <= fechaAhora).Count(),
+                //    productosVendidos = db.DETALLE_VENTA
+                //        .Where(d => d.VENTA.ID_CAJA == apertura.ID_CAJA
+                //                 && d.VENTA.FECHA >= apertura.FECHA_APERTURA
+                //                 && d.VENTA.FECHA <= fechaAhora
+                //                 && d.ID_PRODUCTO != null)
+                //        .Sum(d => (decimal?)d.CANTIDAD) ?? 0,
+                //    packsVendidos = db.DETALLE_VENTA
+                //        .Where(d => d.VENTA.ID_CAJA == apertura.ID_CAJA
+                //                 && d.VENTA.FECHA >= apertura.FECHA_APERTURA
+                //                 && d.VENTA.FECHA <= fechaAhora
+                //                 && d.ID_PRODUCTO == null)
+                //        .Sum(d => (decimal?)d.CANTIDAD) ?? 0,
+                //    contieneCigarros = db.VENTA.Any(v => v.ID_CAJA == apertura.ID_CAJA
+                //                 && v.FECHA >= apertura.FECHA_APERTURA
+                //                 && v.FECHA <= fechaAhora
+                //                 && v.CONTIENE_CIGARROS == true)
+                //});
                 return Ok(new
                 {
                     message = "Caja cerrada correctamente",
@@ -130,33 +176,22 @@ namespace api_amanda.Controllers
                     fechaApertura = apertura.FECHA_APERTURA,
                     fechaCierre = apertura.FECHA_CIERRE,
                     montoInicial = apertura.MONTO_INICIAL,
-                    totalVentas = totalVentas,
-                    montoFinal = montoFinal,
-                    montoCigarros = montoCigarros,
-                    
 
-                    // Extras interesantes para mostrar en impresión o PDF
+                    totalVentas = totalGeneral,
+                    montoProductos = montoProductos,
+                    montoCigarros = montoCigarros,
+                    montoFinal = apertura.MONTO_INICIAL + totalGeneral,
+
                     usuario = db.USUARIO.Where(u => u.ID_USUARIO == apertura.ID_USUARIO).Select(u => u.NOMBRE).FirstOrDefault(),
                     totalTransacciones = db.VENTA
-                        .Where(v => v.ID_CAJA == apertura.ID_CAJA
-                                 && v.FECHA >= apertura.FECHA_APERTURA
-                                 && v.FECHA <= fechaAhora).Count(),
+        .Where(v => v.ID_APERTURA_CIERRE == apertura.ID_APERTURA_CIERRE)
+        .Count(),
+
                     productosVendidos = db.DETALLE_VENTA
-                        .Where(d => d.VENTA.ID_CAJA == apertura.ID_CAJA
-                                 && d.VENTA.FECHA >= apertura.FECHA_APERTURA
-                                 && d.VENTA.FECHA <= fechaAhora
-                                 && d.ID_PRODUCTO != null)
-                        .Sum(d => (decimal?)d.CANTIDAD) ?? 0,
-                    packsVendidos = db.DETALLE_VENTA
-                        .Where(d => d.VENTA.ID_CAJA == apertura.ID_CAJA
-                                 && d.VENTA.FECHA >= apertura.FECHA_APERTURA
-                                 && d.VENTA.FECHA <= fechaAhora
-                                 && d.ID_PRODUCTO == null)
-                        .Sum(d => (decimal?)d.CANTIDAD) ?? 0,
-                    contieneCigarros = db.VENTA.Any(v => v.ID_CAJA == apertura.ID_CAJA
-                                 && v.FECHA >= apertura.FECHA_APERTURA
-                                 && v.FECHA <= fechaAhora
-                                 && v.CONTIENE_CIGARROS == true)
+        .Where(d => d.VENTA.ID_APERTURA_CIERRE == apertura.ID_APERTURA_CIERRE && d.ID_PRODUCTO != null)
+        .Sum(d => (decimal?)d.CANTIDAD) ?? 0,
+
+                    contieneCigarros = montoCigarros > 0
                 });
             }
         }
