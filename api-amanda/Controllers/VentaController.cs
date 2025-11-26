@@ -53,7 +53,11 @@ namespace api_amanda.Controllers
 
                         // Verificar stock suficiente
                         if (prod.STOCK < item.Cantidad)
-                            return BadRequest($"Stock insuficiente para producto {prod.NOMBRE}.");
+                        {
+                            //comentamos para permitir que se venda stock negativo
+                            //return BadRequest($"Stock insuficiente para producto {prod.NOMBRE}.");
+                        }
+                            
 
                         // Marcar si es cigarrillo
                         if (prod.TIPO_PRODUCTO != null && prod.TIPO_PRODUCTO.CIGARRILLO == true)
@@ -75,7 +79,11 @@ namespace api_amanda.Controllers
 
                             var totalUnidades = det.CANTIDAD_PRODUCTO * item.Cantidad;
                             if (prod.STOCK < totalUnidades)
-                                return BadRequest($"Stock insuficiente para producto {prod.NOMBRE} del pack {pack.NOMBRE_PACK}.");
+                            {
+                                //comentamos para permitir que se venda stock negativo
+                                //return BadRequest($"Stock insuficiente para producto {prod.NOMBRE} del pack {pack.NOMBRE_PACK}.");
+                            }
+
 
                             if (prod.TIPO_PRODUCTO != null && prod.TIPO_PRODUCTO.CIGARRILLO == true)
                                 contieneCigarros = true;
