@@ -41,7 +41,7 @@ namespace api_amanda.Controllers
         [Route("")]
         public IHttpActionResult CreateProducto(ProductoDto dto)
         {
-            if (dto == null) return BadRequest("Datos inválidos");
+            if (dto == null) return Content(HttpStatusCode.BadRequest, new Error("Datos inválidos"));
 
             using (var db = new AMANDAEntities())
             {

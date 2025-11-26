@@ -19,7 +19,7 @@ namespace api_amanda.Controllers
         public IHttpActionResult GetUsuarios(int idAdmin)
         {
             if (!Permisos.EsAdmin(idAdmin))
-                return BadRequest("No autorizado.");
+                return Content(HttpStatusCode.BadRequest, new Error("No autorizado."));
 
             using (var db = new AMANDAEntities())
             {
@@ -44,15 +44,15 @@ namespace api_amanda.Controllers
         public IHttpActionResult CrearUsuario(UsuarioDto dto, int idAdmin)
         {
             if (!Permisos.EsAdmin(idAdmin))
-                return BadRequest("No autorizado.");
+                return Content(HttpStatusCode.BadRequest, new Error("No autorizado."));
 
             if (dto == null || string.IsNullOrEmpty(dto.Password))
-                return BadRequest("Datos incompletos");
+                return Content(HttpStatusCode.BadRequest, new Error("Datos incompletos"));
 
             using (var db = new AMANDAEntities())
             {
                 if (db.USUARIO.Any(u => u.USERNAME == dto.Username))
-                    return BadRequest("Ya existe un usuario con ese nombre");
+                    return Content(HttpStatusCode.BadRequest, new Error("Ya existe un usuario con ese nombre"));
 
                 var nuevo = new USUARIO
                 {
@@ -87,7 +87,7 @@ namespace api_amanda.Controllers
         public IHttpActionResult EditarUsuario(int id, UsuarioDto dto, int idAdmin)
         {
             if (!Permisos.EsAdmin(idAdmin))
-                return BadRequest("No autorizado.");
+                return Content(HttpStatusCode.BadRequest, new Error("No autorizado."));
 
             using (var db = new AMANDAEntities())
             {
@@ -95,7 +95,7 @@ namespace api_amanda.Controllers
                 if (u == null) return NotFound();
 
                 if (db.USUARIO.Any(x => x.USERNAME == dto.Username && x.ID_USUARIO != id))
-                    return BadRequest("Ya existe otro usuario con ese nombre de usuario");
+                    return Content(HttpStatusCode.BadRequest, new Error("Ya existe otro usuario con ese nombre de usuario"));
 
                 u.NOMBRE = dto.Nombre;
                 u.CORREO = dto.Correo;
@@ -118,7 +118,7 @@ namespace api_amanda.Controllers
         public IHttpActionResult CambiarEstado(int id, int idAdmin)
         {
             if (!Permisos.EsAdmin(idAdmin))
-                return BadRequest("No autorizado.");
+                return Content(HttpStatusCode.BadRequest, new Error("No autorizado."));
             using (var db = new AMANDAEntities())
             {
                 var u = db.USUARIO.Find(id);

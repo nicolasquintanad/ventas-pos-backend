@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Net;
 using System.Web.Http;
 using api_amanda.Models;
 using api_amanda.Models.DTO;
@@ -14,21 +15,21 @@ namespace api_amanda.Controllers
         public IHttpActionResult RegistrarEntrada([FromBody] EntradaStockDto dto)
         {
             if (dto == null)
-                return BadRequest("Datos inválidos");
+                return Content(HttpStatusCode.BadRequest, new Error("Datos inválidos"));
 
             using (var db = new AMANDAEntities())
             {
                 var producto = db.PRODUCTO.Find(dto.ID_PRODUCTO);
                 if (producto == null)
-                    return BadRequest("Producto no encontrado");
+                    return Content(HttpStatusCode.BadRequest, new Error("Producto no encontrado"));
 
                 var proveedor = db.PROVEEDOR.Find(dto.ID_PROVEEDOR);
                 if (proveedor == null)
-                    return BadRequest("Proveedor no encontrado");
+                    return Content(HttpStatusCode.BadRequest, new Error("Proveedor no encontrado"));
 
                 var usuario = db.USUARIO.Find(dto.ID_USUARIO);
                 if (usuario == null)
-                    return BadRequest("Usuario inválido");
+                    return Content(HttpStatusCode.BadRequest, new Error("Usuario inválido"));
 
                 // Registrar entrada
                 var entrada = new ENTRADA_PRODUCTO
@@ -111,11 +112,11 @@ namespace api_amanda.Controllers
                     return NotFound();
 
                 if (entrada.ANULADA == true)
-                    return BadRequest("La entrada ya está anulada.");
+                    return Content(HttpStatusCode.BadRequest, new Error("La entrada ya está anulada."));
 
                 var producto = db.PRODUCTO.Find(entrada.ID_PRODUCTO);
                 if (producto == null)
-                    return BadRequest("Producto asociado no encontrado.");
+                    return Content(HttpStatusCode.BadRequest, new Error("Producto asociado no encontrado."));
 
                 // Restar stock
                 producto.STOCK -= entrada.CANTIDAD;

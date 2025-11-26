@@ -1,4 +1,5 @@
 ﻿using api_amanda.Models;
+using api_amanda.Models.DTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -59,14 +60,14 @@ namespace api_amanda.Controllers
                 var rol = db.ROL_USUARIO.FirstOrDefault(r => r.ID_USUARIO == usuario.ID_USUARIO);
 
                 if (rol == null || (rol.SLUG != "admin" && rol.SLUG != "cajero"))
-                    return BadRequest("No tiene permisos para abrir caja.");
+                    return Content(HttpStatusCode.BadRequest, new Error("No tiene permisos para abrir caja."));
 
                 // Validar si ya tiene caja activa
                 var activa = db.APERTURA_CIERRE
                     .FirstOrDefault(a => a.ID_CAJA == idCaja && a.ACTIVA == true);
 
                 if (activa != null)
-                    return BadRequest("Este usuario ya tiene una caja activa.");
+                    return Content(HttpStatusCode.BadRequest, new Error("Este usuario ya tiene una caja activa."));
 
                 // Crear apertura
                 var apertura = new APERTURA_CIERRE
@@ -95,7 +96,7 @@ namespace api_amanda.Controllers
                     .FirstOrDefault(a => a.ID_USUARIO == idUsuario && a.ACTIVA == true);
 
                 if (apertura == null)
-                    return BadRequest("Este usuario no tiene una caja activa.");
+                    return Content(HttpStatusCode.BadRequest, new Error("Este usuario no tiene una caja activa."));
 
                 DateTime fechaAhora = DateTime.Now;
 

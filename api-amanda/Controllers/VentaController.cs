@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Net;
 using System.Web.Http;
 using api_amanda.Models;
 using api_amanda.Models.DTO;
@@ -16,7 +17,7 @@ namespace api_amanda.Controllers
         {
 
             if (dto == null || dto.Items == null || !dto.Items.Any())
-                return BadRequest("No hay ítems en la venta.");
+                return Content(HttpStatusCode.BadRequest, new Error("No hay ítems en la venta."));
 
             using (var db = new AMANDAEntities())
             {
@@ -24,12 +25,12 @@ namespace api_amanda.Controllers
                 // Validar usuario
                 var usuario = db.USUARIO.Find(dto.IdUsuario);
                 if (usuario == null)
-                    return BadRequest("Usuario no válido.");
+                    return Content(HttpStatusCode.BadRequest, new Error("Usuario no válido."));
 
                 var cajaActiva = db.APERTURA_CIERRE.FirstOrDefault(a => a.ID_USUARIO == dto.IdUsuario && a.ACTIVA == true);
 
                 if (cajaActiva == null)
-                    return BadRequest("No puede vender sin tener una caja abierta.");
+                    return Content(HttpStatusCode.BadRequest, new Error("No puede vender sin tener una caja abierta."));
 
 
                 dto.IdCaja = cajaActiva.ID_CAJA;
@@ -40,7 +41,7 @@ namespace api_amanda.Controllers
                 foreach (var item in dto.Items)
                 {
                     if (item.Cantidad <= 0)
-                        return BadRequest("Cantidad inválida en un ítem.");
+                        return Content(HttpStatusCode.BadRequest, new Error("Cantidad inválida en un ítem."));
 
                     decimal subtotal = item.Cantidad * item.PrecioUnitario;
                     total += subtotal;
@@ -49,7 +50,7 @@ namespace api_amanda.Controllers
                     {
                         var prod = db.PRODUCTO.Find(item.Id);
                         if (prod == null)
-                            return BadRequest("Producto de la venta no existe.");
+                            return Content(HttpStatusCode.BadRequest, new Error("Producto de la venta no existe."));
 
                         // Verificar stock suficiente
                         if (prod.STOCK < item.Cantidad)
@@ -67,7 +68,7 @@ namespace api_amanda.Controllers
                     {
                         var pack = db.PACK.Find(item.Id);
                         if (pack == null)
-                            return BadRequest("Pack de la venta no existe.");
+                            return Content(HttpStatusCode.BadRequest, new Error("Pack de la venta no existe."));
 
                         // Verificar stock suficiente por cada producto del pack
                         var detallesPack = db.PACK_DETALLE.Where(d => d.ID_PACK == pack.ID_PACK).ToList();
@@ -75,7 +76,7 @@ namespace api_amanda.Controllers
                         {
                             var prod = det.PRODUCTO;
                             if (prod == null)
-                                return BadRequest("Producto de pack no encontrado.");
+                                return Content(HttpStatusCode.BadRequest, new Error("Producto de pack no encontrado."));
 
                             var totalUnidades = det.CANTIDAD_PRODUCTO * item.Cantidad;
                             if (prod.STOCK < totalUnidades)
@@ -91,7 +92,7 @@ namespace api_amanda.Controllers
                     }
                     else
                     {
-                        return BadRequest("Tipo de ítem inválido (use 'producto' o 'pack').");
+                        return Content(HttpStatusCode.BadRequest, new Error("Tipo de ítem inválido (use 'producto' o 'pack')."));
                     }
                 }
 
