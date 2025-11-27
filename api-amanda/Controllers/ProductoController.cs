@@ -45,6 +45,11 @@ namespace api_amanda.Controllers
 
             using (var db = new AMANDAEntities())
             {
+                var producto = db.PRODUCTO.Where(x => x.SKU == dto.SKU).FirstOrDefault();
+                if (producto!=null)
+                {
+                    return Content(HttpStatusCode.BadRequest, new Error("SKU ya está asociado a un producto anterior"));
+                }
                 var p = new PRODUCTO
                 {
                     SKU = dto.SKU,

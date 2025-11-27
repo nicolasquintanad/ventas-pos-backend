@@ -462,9 +462,21 @@ namespace api_amanda.Controllers
                 );
 
             var resultado = detalleProductos
-                .Union(detallePackProductos)
-                .OrderBy(r => r.FECHA)
-                .ToList();
+    .Union(detallePackProductos)
+    .GroupBy(r => new { r.Producto, r.Proveedor, r.PrecioUnitario, r.Caja, r.Usuario })
+    .Select(g => new ReporteVentaDTO
+    {
+        FECHA = g.Min(x => x.FECHA),
+        Usuario = g.Key.Usuario,
+        Caja = g.Key.Caja,
+        Producto = g.Key.Producto,
+        Proveedor = g.Key.Proveedor,
+        Cantidad = g.Sum(x => x.Cantidad),
+        PrecioUnitario = g.Key.PrecioUnitario,
+        SubTotal = g.Sum(x => x.SubTotal)
+    })
+    .OrderBy(r => r.FECHA)
+    .ToList();
 
             return resultado;
         }
