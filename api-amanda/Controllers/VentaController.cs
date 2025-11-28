@@ -4,6 +4,7 @@ using System.Net;
 using System.Web.Http;
 using api_amanda.Models;
 using api_amanda.Models.DTO;
+using System.Data.Objects;
 
 namespace api_amanda.Controllers
 {
@@ -219,6 +220,79 @@ namespace api_amanda.Controllers
                     idVenta = venta.ID_VENTA,
                     total = venta.TOTAL
                 });
+            }
+        }
+        [HttpGet]
+        [Route("{idVenta}/detalle")]
+        public IHttpActionResult ObtenerDetalleVenta(int idVenta)
+        {
+            using (var db = new AMANDAEntities())
+            {
+                var venta = db.VENTA.FirstOrDefault(v => v.ID_VENTA == idVenta);
+                if (venta == null)
+                    return BadRequest("Venta no encontrada.");
+
+                // ======== DETALLE NORMAL ========
+                var detalleProductos = db.DETALLE_VENTA
+                    .Where(d => d.ID_VENTA == idVenta && d.ID_PRODUCTO != null)
+                    .Select(d => new
+                    {
+                        nombre = d.NOMBRE,
+                        cantidad = d.CANTIDAD,
+                        subtotal = d.SUBTOTAL
+                    });
+
+                // ======== DETALLE PACK → Desglosado ========
+                var detallePack = db.DETALLE_VENTA
+                    .Where(d => d.ID_VENTA == idVenta && d.ID_PRODUCTO == null)
+                    .SelectMany(d =>
+                        db.PACK_DETALLE
+                        .Where(pd => pd.ID_PACK == db.PACK.Where(p => p.SKU_PACK == d.SKU)
+                                                              .Select(p => p.ID_PACK).FirstOrDefault())
+                        .Select(pd => new
+                        {
+                            nombre = pd.PRODUCTO.NOMBRE,
+                            cantidad = pd.CANTIDAD_PRODUCTO * d.CANTIDAD,
+                            subtotal = (pd.CANTIDAD_PRODUCTO * d.CANTIDAD) * pd.PRODUCTO.PRECIO
+                        })
+                    );
+
+                // ======== UNIR + ORDENAR ========
+                var detalleFinal = detalleProductos
+                    .Union(detallePack)
+                    .OrderBy(d => d.nombre)
+                    .ToList();
+
+                return Ok(new
+                {
+                    venta.ID_VENTA,
+                    venta.FECHA,
+                    venta.TOTAL,
+                    caja = venta.CAJA.NOMBRE,
+                    detalle = detalleFinal
+                });
+            }
+        }
+        [HttpGet]
+        [Route("dia")]
+        public IHttpActionResult VentasDia()
+        {
+            using (var db = new AMANDAEntities())
+            {
+                DateTime hoy = DateTime.Today;
+                var ventas = db.VENTA
+                    .Where(v => EntityFunctions.TruncateTime(v.FECHA) == hoy)
+                    .OrderByDescending(v => v.ID_VENTA)
+                    .Select(v => new
+                    {
+                        v.ID_VENTA,
+                        v.FECHA,
+                        Caja = v.CAJA.NOMBRE,
+                        v.TOTAL
+                    })
+                    .ToList();
+
+                return Ok(ventas);
             }
         }
     }
