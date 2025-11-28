@@ -41,10 +41,15 @@ namespace api_amanda.Controllers
         [Route("")]
         public IHttpActionResult CreateProducto(ProductoDto dto)
         {
-            if (dto == null) return BadRequest("Datos inválidos");
+            if (dto == null) return Content(HttpStatusCode.BadRequest, new Error("Datos inválidos"));
 
             using (var db = new AMANDAEntities())
             {
+                var producto = db.PRODUCTO.Where(x => x.SKU == dto.SKU).FirstOrDefault();
+                if (producto!=null)
+                {
+                    return Content(HttpStatusCode.BadRequest, new Error("SKU ya está asociado a un producto anterior"));
+                }
                 var p = new PRODUCTO
                 {
                     SKU = dto.SKU,

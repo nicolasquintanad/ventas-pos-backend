@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Net;
 using System.Web.Http;
 using api_amanda.Models;
 using api_amanda.Models.DTO;
@@ -22,7 +23,7 @@ namespace api_amanda.Controllers
         public IHttpActionResult CrearPack([FromBody] PackDto dto)
         {
             if (dto == null || dto.Detalles == null || dto.Detalles.Count == 0)
-                return BadRequest("Datos incompletos.");
+                return Content(HttpStatusCode.BadRequest, new Error("Datos incompletos."));
 
             using (var db = new AMANDAEntities())
             {

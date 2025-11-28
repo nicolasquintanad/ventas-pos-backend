@@ -304,6 +304,7 @@
       <DependentUpon>Amanda.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\DTO\EntradaStockDto.cs" />
+    <Compile Include="Models\DTO\Error.cs" />
     <Compile Include="Models\DTO\LoginDto.cs" />
     <Compile Include="Models\DTO\PackDto.cs" />
     <Compile Include="Models\DTO\ProductoDto.cs" />
