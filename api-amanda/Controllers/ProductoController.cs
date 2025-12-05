@@ -30,7 +30,9 @@ namespace api_amanda.Controllers
                     stockUnits = p.STOCK,
                     exempt = p.EXCENTO_IVA,
                     typeId = p.ID_TIPO_PRODUCTO,
-                    typeName = p.TIPO_PRODUCTO.NOMBRE
+                    typeName = p.TIPO_PRODUCTO.NOMBRE,
+                    alertaNombre = p.ALERTA_STOCK.NOMBRE,
+                    ID_ALERTA = p.ID_ALERTA
                 }).ToList();
 
                 return Ok(productos);
@@ -58,8 +60,9 @@ namespace api_amanda.Controllers
                     PRECIO = dto.PRECIO,
                     STOCK = dto.STOCK,
                     EXCENTO_IVA = dto.EXCENTO_IVA,
-                    ID_TIPO_PRODUCTO = dto.ID_TIPO_PRODUCTO
-                };
+                    ID_TIPO_PRODUCTO = dto.ID_TIPO_PRODUCTO,
+                    ID_ALERTA = dto.ID_ALERTA
+            };
 
                 db.PRODUCTO.Add(p);
                 db.SaveChanges();
@@ -84,6 +87,7 @@ namespace api_amanda.Controllers
                 product.STOCK = dto.STOCK;
                 product.EXCENTO_IVA = dto.EXCENTO_IVA;
                 product.ID_TIPO_PRODUCTO = dto.ID_TIPO_PRODUCTO;
+                product.ID_ALERTA = dto.ID_ALERTA;
 
                 db.SaveChanges();
 
@@ -170,6 +174,60 @@ namespace api_amanda.Controllers
             catch (Exception ex)
             {
                 return InternalServerError(ex);
+            }
+        }
+        [HttpGet]
+        [Route("alertas-stock")]
+        public IHttpActionResult GetAlertasStock()
+        {
+            using (var db = new AMANDAEntities())
+            {
+                var alertas = db.ALERTA_STOCK
+                    .Select(a => new {
+                        id = a.ID_ALERTA,
+                        nombre = a.NOMBRE,
+                        unidades = a.UNIDADES
+                    }).ToList();
+
+                return Ok(alertas);
+            }
+        }
+        [HttpGet]
+        [Route("alertas-resumen")]
+        public IHttpActionResult GetResumenAlertas()
+        {
+            using (var db = new AMANDAEntities())
+            {
+                var resumen = db.PRODUCTO
+                    .GroupBy(p => p.ALERTA_STOCK.NOMBRE)
+                    .Select(g => new
+                    {
+                        nivel = g.Key,
+                        cantidad = g.Count()
+                    })
+                    .ToList();
+
+                return Ok(resumen);
+            }
+        }
+        [HttpGet]
+        [Route("productos-criticos")]
+        public IHttpActionResult GetProductosCriticos()
+        {
+            using (var db = new AMANDAEntities())
+            {
+                var criticos = db.PRODUCTO
+                    .Where(p => p.STOCK <= p.ALERTA_STOCK.UNIDADES)
+                    .Select(p => new {
+                        id = p.ID_PRODUCTO,
+                        sku = p.SKU,
+                        nombre = p.NOMBRE,
+                        stock = p.STOCK,
+                        nivel = p.ALERTA_STOCK.NOMBRE,
+                        minimo = p.ALERTA_STOCK.UNIDADES
+                    }).ToList();
+
+                return Ok(criticos);
             }
         }
     }

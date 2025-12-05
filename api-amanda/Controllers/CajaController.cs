@@ -132,6 +132,32 @@ namespace api_amanda.Controllers
 
                 var totalGeneral = montoCigarros + montoProductos;
 
+                // PACKS vendidos (líneas pack)
+                var packsVendidos = db.DETALLE_VENTA
+                    .Where(d => d.VENTA.ID_APERTURA_CIERRE == apertura.ID_APERTURA_CIERRE
+                             && d.ID_PRODUCTO == null)
+                    .Sum(d => (decimal?)d.CANTIDAD) ?? 0;
+
+                // Productos individuales vendidos
+                var productosIndividualesVendidos = db.DETALLE_VENTA
+                    .Where(d => d.VENTA.ID_APERTURA_CIERRE == apertura.ID_APERTURA_CIERRE
+                             && d.ID_PRODUCTO != null)
+                    .Sum(d => (decimal?)d.CANTIDAD) ?? 0;
+
+                // Productos contenidos dentro de packs
+                var productosEnPacks = (
+                    from dv in db.DETALLE_VENTA
+                    join p in db.PACK on dv.SKU equals p.SKU_PACK
+                    join pd in db.PACK_DETALLE on p.ID_PACK equals pd.ID_PACK
+                    where dv.VENTA.ID_APERTURA_CIERRE == apertura.ID_APERTURA_CIERRE
+                          && dv.ID_PRODUCTO == null
+                    select (pd.CANTIDAD_PRODUCTO * dv.CANTIDAD)
+                ).Sum() ?? 0;
+
+                // Total productos (individuales + internos de packs)
+                var productosVendidosTotal = productosIndividualesVendidos + productosEnPacks;
+
+
                 // RESPUESTA
                 //return Ok(new
                 //{
@@ -188,9 +214,9 @@ namespace api_amanda.Controllers
         .Where(v => v.ID_APERTURA_CIERRE == apertura.ID_APERTURA_CIERRE)
         .Count(),
 
-                    productosVendidos = db.DETALLE_VENTA
-        .Where(d => d.VENTA.ID_APERTURA_CIERRE == apertura.ID_APERTURA_CIERRE && d.ID_PRODUCTO != null)
-        .Sum(d => (decimal?)d.CANTIDAD) ?? 0,
+                    
+                    productosVendidos = productosVendidosTotal,
+                    packsVendidos = packsVendidos,
 
                     contieneCigarros = montoCigarros > 0
                 });

@@ -276,6 +276,9 @@
     </Compile>
     <Compile Include="Helpers\Encriptacion.cs" />
     <Compile Include="Helpers\Permisos.cs" />
+    <Compile Include="Models\ALERTA_STOCK.cs">
+      <DependentUpon>Amanda.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Amanda.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -308,6 +311,7 @@
     <Compile Include="Models\DTO\LoginDto.cs" />
     <Compile Include="Models\DTO\PackDto.cs" />
     <Compile Include="Models\DTO\ProductoDto.cs" />
+    <Compile Include="Models\DTO\ProveedorDto.cs" />
     <Compile Include="Models\DTO\ReporteVentaDTO.cs" />
     <Compile Include="Models\DTO\TipoProductoDto.cs" />
     <Compile Include="Models\DTO\UsuarioDto.cs" />
