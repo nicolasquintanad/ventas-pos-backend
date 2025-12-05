@@ -30,7 +30,6 @@ namespace api_amanda.Models
         public DbSet<PACK> PACK { get; set; }
         public DbSet<PACK_DETALLE> PACK_DETALLE { get; set; }
         public DbSet<PROMOCION> PROMOCION { get; set; }
-        public DbSet<PROVEEDOR> PROVEEDOR { get; set; }
         public DbSet<TIPO_PRODUCTO> TIPO_PRODUCTO { get; set; }
         public DbSet<TRANSACCION_CAJA> TRANSACCION_CAJA { get; set; }
         public DbSet<USUARIO> USUARIO { get; set; }
@@ -41,5 +40,7 @@ namespace api_amanda.Models
         public DbSet<APERTURA_CIERRE> APERTURA_CIERRE { get; set; }
         public DbSet<HISTORIAL_STOCK> HISTORIAL_STOCK { get; set; }
         public DbSet<VENTA> VENTA { get; set; }
+        public DbSet<ALERTA_STOCK> ALERTA_STOCK { get; set; }
+        public DbSet<PROVEEDOR> PROVEEDOR { get; set; }
     }
 }

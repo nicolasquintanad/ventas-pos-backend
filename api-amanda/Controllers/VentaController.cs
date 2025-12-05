@@ -232,35 +232,15 @@ namespace api_amanda.Controllers
                 if (venta == null)
                     return BadRequest("Venta no encontrada.");
 
-                // ======== DETALLE NORMAL ========
-                var detalleProductos = db.DETALLE_VENTA
-                    .Where(d => d.ID_VENTA == idVenta && d.ID_PRODUCTO != null)
+                // Solo leer lo que realmente se vendió
+                var detalle = db.DETALLE_VENTA
+                    .Where(d => d.ID_VENTA == idVenta)
                     .Select(d => new
                     {
                         nombre = d.NOMBRE,
                         cantidad = d.CANTIDAD,
                         subtotal = d.SUBTOTAL
-                    });
-
-                // ======== DETALLE PACK → Desglosado ========
-                var detallePack = db.DETALLE_VENTA
-                    .Where(d => d.ID_VENTA == idVenta && d.ID_PRODUCTO == null)
-                    .SelectMany(d =>
-                        db.PACK_DETALLE
-                        .Where(pd => pd.ID_PACK == db.PACK.Where(p => p.SKU_PACK == d.SKU)
-                                                              .Select(p => p.ID_PACK).FirstOrDefault())
-                        .Select(pd => new
-                        {
-                            nombre = pd.PRODUCTO.NOMBRE,
-                            cantidad = pd.CANTIDAD_PRODUCTO * d.CANTIDAD,
-                            subtotal = (pd.CANTIDAD_PRODUCTO * d.CANTIDAD) * pd.PRODUCTO.PRECIO
-                        })
-                    );
-
-                // ======== UNIR + ORDENAR ========
-                var detalleFinal = detalleProductos
-                    .Union(detallePack)
-                    .OrderBy(d => d.nombre)
+                    })
                     .ToList();
 
                 return Ok(new
@@ -269,7 +249,7 @@ namespace api_amanda.Controllers
                     venta.FECHA,
                     venta.TOTAL,
                     caja = venta.CAJA.NOMBRE,
-                    detalle = detalleFinal
+                    detalle = detalle
                 });
             }
         }

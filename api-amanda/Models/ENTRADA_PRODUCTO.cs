@@ -25,7 +25,7 @@ namespace api_amanda.Models
         public Nullable<bool> ANULADA { get; set; }
     
         public virtual PRODUCTO PRODUCTO { get; set; }
-        public virtual PROVEEDOR PROVEEDOR { get; set; }
         public virtual USUARIO USUARIO { get; set; }
+        public virtual PROVEEDOR PROVEEDOR { get; set; }
     }
 }

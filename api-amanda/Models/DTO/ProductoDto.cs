@@ -14,5 +14,7 @@ namespace api_amanda.Models.DTO
         public decimal STOCK { get; set; }
         public bool EXCENTO_IVA { get; set; }
         public int? ID_TIPO_PRODUCTO { get; set; }
+        public int? ID_ALERTA { get; set; }
+
     }
 }

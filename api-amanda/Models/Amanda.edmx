@@ -5,6 +5,15 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="AMANDAModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="ALERTA_STOCK">
+          <Key>
+            <PropertyRef Name="ID_ALERTA" />
+          </Key>
+          <Property Name="ID_ALERTA" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NOMBRE" Type="nvarchar" MaxLength="20" />
+          <Property Name="DESCRIPCION" Type="nvarchar" MaxLength="50" />
+          <Property Name="UNIDADES" Type="int" />
+        </EntityType>
         <EntityType Name="APERTURA_CIERRE">
           <Key>
             <PropertyRef Name="ID_APERTURA_CIERRE" />
@@ -130,6 +139,7 @@
           <Property Name="USUARIO_UPDATE" Type="int" />
           <Property Name="EXCENTO_IVA" Type="bit" />
           <Property Name="ID_TIPO_PRODUCTO" Type="int" />
+          <Property Name="ID_ALERTA" Type="int" />
         </EntityType>
         <EntityType Name="PROMOCION">
           <Key>
@@ -151,6 +161,13 @@
           <Property Name="DIRECCION" Type="nvarchar" MaxLength="100" />
           <Property Name="CIUDAD" Type="nvarchar" MaxLength="100" />
           <Property Name="FECHA_CREACION" Type="datetime" />
+          <Property Name="VISITA_LUNES" Type="bit" />
+          <Property Name="VISITA_MARTES" Type="bit" />
+          <Property Name="VISITA_MIERCOLES" Type="bit" />
+          <Property Name="VISITA_JUEVES" Type="bit" />
+          <Property Name="VISITA_VIERNES" Type="bit" />
+          <Property Name="VISITA_SABADO" Type="bit" />
+          <Property Name="VISITA_DOMINGO" Type="bit" />
         </EntityType>
         <EntityType Name="ROL_USUARIO">
           <Key>
@@ -364,6 +381,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="PRODUCTO_ALERTA_STOCK_ID_ALERTA_fk">
+          <End Role="ALERTA_STOCK" Type="Self.ALERTA_STOCK" Multiplicity="0..1" />
+          <End Role="PRODUCTO" Type="Self.PRODUCTO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ALERTA_STOCK">
+              <PropertyRef Name="ID_ALERTA" />
+            </Principal>
+            <Dependent Role="PRODUCTO">
+              <PropertyRef Name="ID_ALERTA" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="PRODUCTO_TIPO_PRODUCTO_ID_TIPO_PRODUCTO_fk">
           <End Role="TIPO_PRODUCTO" Type="Self.TIPO_PRODUCTO" Multiplicity="0..1" />
           <End Role="PRODUCTO" Type="Self.PRODUCTO" Multiplicity="*" />
@@ -449,6 +478,7 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="AMANDAModelStoreContainer">
+          <EntitySet Name="ALERTA_STOCK" EntityType="Self.ALERTA_STOCK" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="APERTURA_CIERRE" EntityType="Self.APERTURA_CIERRE" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CAJA" EntityType="Self.CAJA" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DETALLE_PROMOCION" EntityType="Self.DETALLE_PROMOCION" Schema="dbo" store:Type="Tables" />
@@ -516,6 +546,10 @@
           <AssociationSet Name="PACK_DETALLE_PRODUCTO_ID_PRODUCTO_fk" Association="Self.PACK_DETALLE_PRODUCTO_ID_PRODUCTO_fk">
             <End Role="PRODUCTO" EntitySet="PRODUCTO" />
             <End Role="PACK_DETALLE" EntitySet="PACK_DETALLE" />
+          </AssociationSet>
+          <AssociationSet Name="PRODUCTO_ALERTA_STOCK_ID_ALERTA_fk" Association="Self.PRODUCTO_ALERTA_STOCK_ID_ALERTA_fk">
+            <End Role="ALERTA_STOCK" EntitySet="ALERTA_STOCK" />
+            <End Role="PRODUCTO" EntitySet="PRODUCTO" />
           </AssociationSet>
           <AssociationSet Name="PRODUCTO_TIPO_PRODUCTO_ID_TIPO_PRODUCTO_fk" Association="Self.PRODUCTO_TIPO_PRODUCTO_ID_TIPO_PRODUCTO_fk">
             <End Role="TIPO_PRODUCTO" EntitySet="TIPO_PRODUCTO" />
@@ -613,19 +647,6 @@
           <NavigationProperty Name="DETALLE_PROMOCION" Relationship="Self.DETALLE_PROMOCION_PROMOCION_ID_PROMOCION_fk" FromRole="PROMOCION" ToRole="DETALLE_PROMOCION" />
           <NavigationProperty Name="DETALLE_VENTA" Relationship="AMANDAModel.DETALLE_VENTA_PROMOCION_ID_PROMOCION_fk" FromRole="PROMOCION" ToRole="DETALLE_VENTA" />
         </EntityType>
-        <EntityType Name="PROVEEDOR">
-          <Key>
-            <PropertyRef Name="ID_PROVEEDOR" />
-          </Key>
-          <Property Name="ID_PROVEEDOR" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="NOMBRE" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="TELEFONO" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="CORREO" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="DIRECCION" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="CIUDAD" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="FECHA_CREACION" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="ENTRADA_PRODUCTO" Relationship="AMANDAModel.ENTRADA_PRODUCTO_PROVEEDOR_ID_PROVEEDOR_fk" FromRole="PROVEEDOR" ToRole="ENTRADA_PRODUCTO" />
-        </EntityType>
         <EntityType Name="TIPO_PRODUCTO">
           <Key>
             <PropertyRef Name="ID_TIPO_PRODUCTO" />
@@ -696,7 +717,6 @@
           <EntitySet Name="PACK" EntityType="Self.PACK" />
           <EntitySet Name="PACK_DETALLE" EntityType="Self.PACK_DETALLE" />
           <EntitySet Name="PROMOCION" EntityType="Self.PROMOCION" />
-          <EntitySet Name="PROVEEDOR" EntityType="Self.PROVEEDOR" />
           <EntitySet Name="TIPO_PRODUCTO" EntityType="Self.TIPO_PRODUCTO" />
           <EntitySet Name="TRANSACCION_CAJA" EntityType="Self.TRANSACCION_CAJA" />
           <EntitySet Name="USUARIO" EntityType="Self.USUARIO" />
@@ -729,10 +749,6 @@
           <EntitySet Name="ENTRADA_PRODUCTO" EntityType="AMANDAModel.ENTRADA_PRODUCTO" />
           <AssociationSet Name="ENTRADA_PRODUCTO_PRODUCTO_ID_PRODUCTO_fk" Association="AMANDAModel.ENTRADA_PRODUCTO_PRODUCTO_ID_PRODUCTO_fk">
             <End Role="PRODUCTO" EntitySet="PRODUCTO" />
-            <End Role="ENTRADA_PRODUCTO" EntitySet="ENTRADA_PRODUCTO" />
-          </AssociationSet>
-          <AssociationSet Name="ENTRADA_PRODUCTO_PROVEEDOR_ID_PROVEEDOR_fk" Association="AMANDAModel.ENTRADA_PRODUCTO_PROVEEDOR_ID_PROVEEDOR_fk">
-            <End Role="PROVEEDOR" EntitySet="PROVEEDOR" />
             <End Role="ENTRADA_PRODUCTO" EntitySet="ENTRADA_PRODUCTO" />
           </AssociationSet>
           <AssociationSet Name="ENTRADA_PRODUCTO_USUARIO_ID_USUARIO_fk" Association="AMANDAModel.ENTRADA_PRODUCTO_USUARIO_ID_USUARIO_fk">
@@ -787,6 +803,16 @@
             <End Role="USUARIO" EntitySet="USUARIO" />
             <End Role="VENTA" EntitySet="VENTA" />
           </AssociationSet>
+          <EntitySet Name="ALERTA_STOCK" EntityType="AMANDAModel.ALERTA_STOCK" />
+          <AssociationSet Name="PRODUCTO_ALERTA_STOCK_ID_ALERTA_fk" Association="AMANDAModel.PRODUCTO_ALERTA_STOCK_ID_ALERTA_fk">
+            <End Role="ALERTA_STOCK" EntitySet="ALERTA_STOCK" />
+            <End Role="PRODUCTO" EntitySet="PRODUCTO" />
+          </AssociationSet>
+          <EntitySet Name="PROVEEDOR" EntityType="AMANDAModel.PROVEEDOR" />
+          <AssociationSet Name="ENTRADA_PRODUCTO_PROVEEDOR_ID_PROVEEDOR_fk" Association="AMANDAModel.ENTRADA_PRODUCTO_PROVEEDOR_ID_PROVEEDOR_fk">
+            <End Role="PROVEEDOR" EntitySet="PROVEEDOR" />
+            <End Role="ENTRADA_PRODUCTO" EntitySet="ENTRADA_PRODUCTO" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="PRODUCTO">
           <Key>
@@ -810,6 +836,8 @@
           <NavigationProperty Name="ENTRADA_PRODUCTO" Relationship="AMANDAModel.ENTRADA_PRODUCTO_PRODUCTO_ID_PRODUCTO_fk" FromRole="PRODUCTO" ToRole="ENTRADA_PRODUCTO" />
           <NavigationProperty Name="DETALLE_VENTA" Relationship="AMANDAModel.DETALLE_VENTA_PRODUCTO_ID_PRODUCTO_fk" FromRole="PRODUCTO" ToRole="DETALLE_VENTA" />
           <NavigationProperty Name="HISTORIAL_STOCK" Relationship="AMANDAModel.FK__HISTORIAL__ID_PR__02FC7413" FromRole="PRODUCTO" ToRole="HISTORIAL_STOCK" />
+          <Property Name="ID_ALERTA" Type="Int32" />
+          <NavigationProperty Name="ALERTA_STOCK" Relationship="AMANDAModel.PRODUCTO_ALERTA_STOCK_ID_ALERTA_fk" FromRole="PRODUCTO" ToRole="ALERTA_STOCK" />
         </EntityType>
         <Association Name="DETALLE_PROMOCION_PRODUCTO_ID_PRODUCTO_fk">
           <End Type="AMANDAModel.PRODUCTO" Role="PRODUCTO" Multiplicity="0..1" />
@@ -884,8 +912,8 @@
           <Property Name="SKU" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="ANULADA" Type="Boolean" />
           <NavigationProperty Name="PRODUCTO" Relationship="AMANDAModel.ENTRADA_PRODUCTO_PRODUCTO_ID_PRODUCTO_fk" FromRole="ENTRADA_PRODUCTO" ToRole="PRODUCTO" />
-          <NavigationProperty Name="PROVEEDOR" Relationship="AMANDAModel.ENTRADA_PRODUCTO_PROVEEDOR_ID_PROVEEDOR_fk" FromRole="ENTRADA_PRODUCTO" ToRole="PROVEEDOR" />
           <NavigationProperty Name="USUARIO" Relationship="AMANDAModel.ENTRADA_PRODUCTO_USUARIO_ID_USUARIO_fk" FromRole="ENTRADA_PRODUCTO" ToRole="USUARIO" />
+          <NavigationProperty Name="PROVEEDOR" Relationship="AMANDAModel.ENTRADA_PRODUCTO_PROVEEDOR_ID_PROVEEDOR_fk" FromRole="ENTRADA_PRODUCTO" ToRole="PROVEEDOR" />
         </EntityType>
         <Association Name="ENTRADA_PRODUCTO_PRODUCTO_ID_PRODUCTO_fk">
           <End Type="AMANDAModel.PRODUCTO" Role="PRODUCTO" Multiplicity="0..1" />
@@ -896,18 +924,6 @@
             </Principal>
             <Dependent Role="ENTRADA_PRODUCTO">
               <PropertyRef Name="ID_PRODUCTO" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="ENTRADA_PRODUCTO_PROVEEDOR_ID_PROVEEDOR_fk">
-          <End Type="AMANDAModel.PROVEEDOR" Role="PROVEEDOR" Multiplicity="0..1" />
-          <End Type="AMANDAModel.ENTRADA_PRODUCTO" Role="ENTRADA_PRODUCTO" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="PROVEEDOR">
-              <PropertyRef Name="ID_PROVEEDOR" />
-            </Principal>
-            <Dependent Role="ENTRADA_PRODUCTO">
-              <PropertyRef Name="ID_PROVEEDOR" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1131,6 +1147,60 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="ALERTA_STOCK">
+          <Key>
+            <PropertyRef Name="ID_ALERTA" />
+          </Key>
+          <Property Name="ID_ALERTA" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NOMBRE" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="DESCRIPCION" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="UNIDADES" Type="Int32" />
+          <NavigationProperty Name="PRODUCTO" Relationship="AMANDAModel.PRODUCTO_ALERTA_STOCK_ID_ALERTA_fk" FromRole="ALERTA_STOCK" ToRole="PRODUCTO" />
+        </EntityType>
+        <Association Name="PRODUCTO_ALERTA_STOCK_ID_ALERTA_fk">
+          <End Type="AMANDAModel.ALERTA_STOCK" Role="ALERTA_STOCK" Multiplicity="0..1" />
+          <End Type="AMANDAModel.PRODUCTO" Role="PRODUCTO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ALERTA_STOCK">
+              <PropertyRef Name="ID_ALERTA" />
+            </Principal>
+            <Dependent Role="PRODUCTO">
+              <PropertyRef Name="ID_ALERTA" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="PROVEEDOR">
+          <Key>
+            <PropertyRef Name="ID_PROVEEDOR" />
+          </Key>
+          <Property Name="ID_PROVEEDOR" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NOMBRE" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="TELEFONO" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="CORREO" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="DIRECCION" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="CIUDAD" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="FECHA_CREACION" Type="DateTime" Precision="3" />
+          <Property Name="VISITA_LUNES" Type="Boolean" />
+          <Property Name="VISITA_MARTES" Type="Boolean" />
+          <Property Name="VISITA_MIERCOLES" Type="Boolean" />
+          <Property Name="VISITA_JUEVES" Type="Boolean" />
+          <Property Name="VISITA_VIERNES" Type="Boolean" />
+          <Property Name="VISITA_SABADO" Type="Boolean" />
+          <Property Name="VISITA_DOMINGO" Type="Boolean" />
+          <NavigationProperty Name="ENTRADA_PRODUCTO" Relationship="AMANDAModel.ENTRADA_PRODUCTO_PROVEEDOR_ID_PROVEEDOR_fk" FromRole="PROVEEDOR" ToRole="ENTRADA_PRODUCTO" />
+        </EntityType>
+        <Association Name="ENTRADA_PRODUCTO_PROVEEDOR_ID_PROVEEDOR_fk">
+          <End Type="AMANDAModel.PROVEEDOR" Role="PROVEEDOR" Multiplicity="0..1" />
+          <End Type="AMANDAModel.ENTRADA_PRODUCTO" Role="ENTRADA_PRODUCTO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PROVEEDOR">
+              <PropertyRef Name="ID_PROVEEDOR" />
+            </Principal>
+            <Dependent Role="ENTRADA_PRODUCTO">
+              <PropertyRef Name="ID_PROVEEDOR" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1196,19 +1266,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="PROVEEDOR">
-            <EntityTypeMapping TypeName="AMANDAModel.PROVEEDOR">
-              <MappingFragment StoreEntitySet="PROVEEDOR">
-                <ScalarProperty Name="ID_PROVEEDOR" ColumnName="ID_PROVEEDOR" />
-                <ScalarProperty Name="NOMBRE" ColumnName="NOMBRE" />
-                <ScalarProperty Name="TELEFONO" ColumnName="TELEFONO" />
-                <ScalarProperty Name="CORREO" ColumnName="CORREO" />
-                <ScalarProperty Name="DIRECCION" ColumnName="DIRECCION" />
-                <ScalarProperty Name="CIUDAD" ColumnName="CIUDAD" />
-                <ScalarProperty Name="FECHA_CREACION" ColumnName="FECHA_CREACION" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="TIPO_PRODUCTO">
             <EntityTypeMapping TypeName="AMANDAModel.TIPO_PRODUCTO">
               <MappingFragment StoreEntitySet="TIPO_PRODUCTO">
@@ -1248,6 +1305,7 @@
           <EntitySetMapping Name="PRODUCTO">
             <EntityTypeMapping TypeName="AMANDAModel.PRODUCTO">
               <MappingFragment StoreEntitySet="PRODUCTO">
+                <ScalarProperty Name="ID_ALERTA" ColumnName="ID_ALERTA" />
                 <ScalarProperty Name="ID_TIPO_PRODUCTO" ColumnName="ID_TIPO_PRODUCTO" />
                 <ScalarProperty Name="EXCENTO_IVA" ColumnName="EXCENTO_IVA" />
                 <ScalarProperty Name="USUARIO_UPDATE" ColumnName="USUARIO_UPDATE" />
@@ -1353,6 +1411,36 @@
                 <ScalarProperty Name="TOTAL" ColumnName="TOTAL" />
                 <ScalarProperty Name="FECHA" ColumnName="FECHA" />
                 <ScalarProperty Name="ID_VENTA" ColumnName="ID_VENTA" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ALERTA_STOCK">
+            <EntityTypeMapping TypeName="AMANDAModel.ALERTA_STOCK">
+              <MappingFragment StoreEntitySet="ALERTA_STOCK">
+                <ScalarProperty Name="UNIDADES" ColumnName="UNIDADES" />
+                <ScalarProperty Name="DESCRIPCION" ColumnName="DESCRIPCION" />
+                <ScalarProperty Name="NOMBRE" ColumnName="NOMBRE" />
+                <ScalarProperty Name="ID_ALERTA" ColumnName="ID_ALERTA" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PROVEEDOR">
+            <EntityTypeMapping TypeName="AMANDAModel.PROVEEDOR">
+              <MappingFragment StoreEntitySet="PROVEEDOR">
+                <ScalarProperty Name="VISITA_DOMINGO" ColumnName="VISITA_DOMINGO" />
+                <ScalarProperty Name="VISITA_SABADO" ColumnName="VISITA_SABADO" />
+                <ScalarProperty Name="VISITA_VIERNES" ColumnName="VISITA_VIERNES" />
+                <ScalarProperty Name="VISITA_JUEVES" ColumnName="VISITA_JUEVES" />
+                <ScalarProperty Name="VISITA_MIERCOLES" ColumnName="VISITA_MIERCOLES" />
+                <ScalarProperty Name="VISITA_MARTES" ColumnName="VISITA_MARTES" />
+                <ScalarProperty Name="VISITA_LUNES" ColumnName="VISITA_LUNES" />
+                <ScalarProperty Name="FECHA_CREACION" ColumnName="FECHA_CREACION" />
+                <ScalarProperty Name="CIUDAD" ColumnName="CIUDAD" />
+                <ScalarProperty Name="DIRECCION" ColumnName="DIRECCION" />
+                <ScalarProperty Name="CORREO" ColumnName="CORREO" />
+                <ScalarProperty Name="TELEFONO" ColumnName="TELEFONO" />
+                <ScalarProperty Name="NOMBRE" ColumnName="NOMBRE" />
+                <ScalarProperty Name="ID_PROVEEDOR" ColumnName="ID_PROVEEDOR" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
