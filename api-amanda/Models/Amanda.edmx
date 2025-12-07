@@ -140,6 +140,7 @@
           <Property Name="EXCENTO_IVA" Type="bit" />
           <Property Name="ID_TIPO_PRODUCTO" Type="int" />
           <Property Name="ID_ALERTA" Type="int" />
+          <Property Name="ID_PROVEEDOR" Type="int" />
         </EntityType>
         <EntityType Name="PROMOCION">
           <Key>
@@ -393,6 +394,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="PRODUCTO_PROVEEDOR_FK">
+          <End Role="PROVEEDOR" Type="Self.PROVEEDOR" Multiplicity="0..1" />
+          <End Role="PRODUCTO" Type="Self.PRODUCTO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PROVEEDOR">
+              <PropertyRef Name="ID_PROVEEDOR" />
+            </Principal>
+            <Dependent Role="PRODUCTO">
+              <PropertyRef Name="ID_PROVEEDOR" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="PRODUCTO_TIPO_PRODUCTO_ID_TIPO_PRODUCTO_fk">
           <End Role="TIPO_PRODUCTO" Type="Self.TIPO_PRODUCTO" Multiplicity="0..1" />
           <End Role="PRODUCTO" Type="Self.PRODUCTO" Multiplicity="*" />
@@ -549,6 +562,10 @@
           </AssociationSet>
           <AssociationSet Name="PRODUCTO_ALERTA_STOCK_ID_ALERTA_fk" Association="Self.PRODUCTO_ALERTA_STOCK_ID_ALERTA_fk">
             <End Role="ALERTA_STOCK" EntitySet="ALERTA_STOCK" />
+            <End Role="PRODUCTO" EntitySet="PRODUCTO" />
+          </AssociationSet>
+          <AssociationSet Name="PRODUCTO_PROVEEDOR_FK" Association="Self.PRODUCTO_PROVEEDOR_FK">
+            <End Role="PROVEEDOR" EntitySet="PROVEEDOR" />
             <End Role="PRODUCTO" EntitySet="PRODUCTO" />
           </AssociationSet>
           <AssociationSet Name="PRODUCTO_TIPO_PRODUCTO_ID_TIPO_PRODUCTO_fk" Association="Self.PRODUCTO_TIPO_PRODUCTO_ID_TIPO_PRODUCTO_fk">
@@ -813,6 +830,10 @@
             <End Role="PROVEEDOR" EntitySet="PROVEEDOR" />
             <End Role="ENTRADA_PRODUCTO" EntitySet="ENTRADA_PRODUCTO" />
           </AssociationSet>
+          <AssociationSet Name="PRODUCTO_PROVEEDOR_FK" Association="AMANDAModel.PRODUCTO_PROVEEDOR_FK">
+            <End Role="PROVEEDOR" EntitySet="PROVEEDOR" />
+            <End Role="PRODUCTO" EntitySet="PRODUCTO" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="PRODUCTO">
           <Key>
@@ -838,6 +859,8 @@
           <NavigationProperty Name="HISTORIAL_STOCK" Relationship="AMANDAModel.FK__HISTORIAL__ID_PR__02FC7413" FromRole="PRODUCTO" ToRole="HISTORIAL_STOCK" />
           <Property Name="ID_ALERTA" Type="Int32" />
           <NavigationProperty Name="ALERTA_STOCK" Relationship="AMANDAModel.PRODUCTO_ALERTA_STOCK_ID_ALERTA_fk" FromRole="PRODUCTO" ToRole="ALERTA_STOCK" />
+          <Property Name="ID_PROVEEDOR" Type="Int32" />
+          <NavigationProperty Name="PROVEEDOR" Relationship="AMANDAModel.PRODUCTO_PROVEEDOR_FK" FromRole="PRODUCTO" ToRole="PROVEEDOR" />
         </EntityType>
         <Association Name="DETALLE_PROMOCION_PRODUCTO_ID_PRODUCTO_fk">
           <End Type="AMANDAModel.PRODUCTO" Role="PRODUCTO" Multiplicity="0..1" />
@@ -1188,6 +1211,7 @@
           <Property Name="VISITA_SABADO" Type="Boolean" />
           <Property Name="VISITA_DOMINGO" Type="Boolean" />
           <NavigationProperty Name="ENTRADA_PRODUCTO" Relationship="AMANDAModel.ENTRADA_PRODUCTO_PROVEEDOR_ID_PROVEEDOR_fk" FromRole="PROVEEDOR" ToRole="ENTRADA_PRODUCTO" />
+          <NavigationProperty Name="PRODUCTO" Relationship="AMANDAModel.PRODUCTO_PROVEEDOR_FK" FromRole="PROVEEDOR" ToRole="PRODUCTO" />
         </EntityType>
         <Association Name="ENTRADA_PRODUCTO_PROVEEDOR_ID_PROVEEDOR_fk">
           <End Type="AMANDAModel.PROVEEDOR" Role="PROVEEDOR" Multiplicity="0..1" />
@@ -1197,6 +1221,18 @@
               <PropertyRef Name="ID_PROVEEDOR" />
             </Principal>
             <Dependent Role="ENTRADA_PRODUCTO">
+              <PropertyRef Name="ID_PROVEEDOR" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="PRODUCTO_PROVEEDOR_FK">
+          <End Type="AMANDAModel.PROVEEDOR" Role="PROVEEDOR" Multiplicity="0..1" />
+          <End Type="AMANDAModel.PRODUCTO" Role="PRODUCTO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PROVEEDOR">
+              <PropertyRef Name="ID_PROVEEDOR" />
+            </Principal>
+            <Dependent Role="PRODUCTO">
               <PropertyRef Name="ID_PROVEEDOR" />
             </Dependent>
           </ReferentialConstraint>
@@ -1305,6 +1341,7 @@
           <EntitySetMapping Name="PRODUCTO">
             <EntityTypeMapping TypeName="AMANDAModel.PRODUCTO">
               <MappingFragment StoreEntitySet="PRODUCTO">
+                <ScalarProperty Name="ID_PROVEEDOR" ColumnName="ID_PROVEEDOR" />
                 <ScalarProperty Name="ID_ALERTA" ColumnName="ID_ALERTA" />
                 <ScalarProperty Name="ID_TIPO_PRODUCTO" ColumnName="ID_TIPO_PRODUCTO" />
                 <ScalarProperty Name="EXCENTO_IVA" ColumnName="EXCENTO_IVA" />

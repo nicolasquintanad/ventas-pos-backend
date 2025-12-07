@@ -17,6 +17,7 @@ namespace api_amanda.Models
         public PROVEEDOR()
         {
             this.ENTRADA_PRODUCTO = new HashSet<ENTRADA_PRODUCTO>();
+            this.PRODUCTO = new HashSet<PRODUCTO>();
         }
     
         public int ID_PROVEEDOR { get; set; }
@@ -35,5 +36,6 @@ namespace api_amanda.Models
         public Nullable<bool> VISITA_DOMINGO { get; set; }
     
         public virtual ICollection<ENTRADA_PRODUCTO> ENTRADA_PRODUCTO { get; set; }
+        public virtual ICollection<PRODUCTO> PRODUCTO { get; set; }
     }
 }

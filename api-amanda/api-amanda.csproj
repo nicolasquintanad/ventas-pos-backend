@@ -313,6 +313,7 @@
     <Compile Include="Models\DTO\ProductoDto.cs" />
     <Compile Include="Models\DTO\ProveedorDto.cs" />
     <Compile Include="Models\DTO\ReporteVentaDTO.cs" />
+    <Compile Include="Models\DTO\SugerenciaProductoDto.cs" />
     <Compile Include="Models\DTO\TipoProductoDto.cs" />
     <Compile Include="Models\DTO\UsuarioDto.cs" />
     <Compile Include="Models\DTO\VentaDto.cs" />
