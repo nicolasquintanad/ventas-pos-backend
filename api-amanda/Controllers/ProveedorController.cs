@@ -256,5 +256,49 @@ namespace api_amanda.Controllers
                 }
             }
         }
+        [HttpGet]
+        [Route("sugerencias-por-dia")]
+        public IHttpActionResult GetSugerenciasPorDia(DateTime fecha)
+        {
+            using (var db = new AMANDAEntities())
+            {
+                var dia = fecha.DayOfWeek;
+
+                var proveedoresDia = db.PROVEEDOR.Where(p =>
+                    (dia == DayOfWeek.Monday && p.VISITA_LUNES == true) ||
+                    (dia == DayOfWeek.Tuesday && p.VISITA_MARTES == true) ||
+                    (dia == DayOfWeek.Wednesday && p.VISITA_MIERCOLES == true) ||
+                    (dia == DayOfWeek.Thursday && p.VISITA_JUEVES == true) ||
+                    (dia == DayOfWeek.Friday && p.VISITA_VIERNES == true) ||
+                    (dia == DayOfWeek.Saturday && p.VISITA_SABADO == true) ||
+                    (dia == DayOfWeek.Sunday && p.VISITA_DOMINGO == true)
+                ).ToList();
+
+                var resultado = new List<object>();
+
+                foreach (var prov in proveedoresDia)
+                {
+                    var sugerencias = db.Database.SqlQuery<SugerenciaProductoDto>(
+                        "EXEC sp_SugerenciaPedidoProveedor @IdProveedor, @FechaCorte, @DiasAnalisis, @DiasHorizonte",
+                        new SqlParameter("@IdProveedor", prov.ID_PROVEEDOR),
+                        new SqlParameter("@FechaCorte", fecha),
+                        new SqlParameter("@DiasAnalisis", 28),
+                        new SqlParameter("@DiasHorizonte", 7)
+                    ).ToList();
+
+                    var conPedido = sugerencias.Where(s => s.CantidadSugerida > 0).ToList();
+                    if (!conPedido.Any()) continue;
+
+                    resultado.Add(new
+                    {
+                        idProveedor = prov.ID_PROVEEDOR,
+                        proveedor = prov.NOMBRE,
+                        sugerencias = conPedido
+                    });
+                }
+
+                return Ok(resultado);
+            }
+        }
     }
 }
