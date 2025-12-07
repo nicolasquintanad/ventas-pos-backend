@@ -32,7 +32,9 @@ namespace api_amanda.Controllers
                     typeId = p.ID_TIPO_PRODUCTO,
                     typeName = p.TIPO_PRODUCTO.NOMBRE,
                     alertaNombre = p.ALERTA_STOCK.NOMBRE,
-                    ID_ALERTA = p.ID_ALERTA
+                    ID_ALERTA = p.ID_ALERTA,
+                    proveedorNombre = p.PROVEEDOR.NOMBRE,
+                    ID_PROVEEDOR = p.ID_PROVEEDOR
                 }).ToList();
 
                 return Ok(productos);
@@ -61,7 +63,8 @@ namespace api_amanda.Controllers
                     STOCK = dto.STOCK,
                     EXCENTO_IVA = dto.EXCENTO_IVA,
                     ID_TIPO_PRODUCTO = dto.ID_TIPO_PRODUCTO,
-                    ID_ALERTA = dto.ID_ALERTA
+                    ID_ALERTA = dto.ID_ALERTA,
+                    ID_PROVEEDOR = dto.ID_PROVEEDOR
             };
 
                 db.PRODUCTO.Add(p);
@@ -88,6 +91,7 @@ namespace api_amanda.Controllers
                 product.EXCENTO_IVA = dto.EXCENTO_IVA;
                 product.ID_TIPO_PRODUCTO = dto.ID_TIPO_PRODUCTO;
                 product.ID_ALERTA = dto.ID_ALERTA;
+                product.ID_PROVEEDOR = dto.ID_PROVEEDOR;
 
                 db.SaveChanges();
 

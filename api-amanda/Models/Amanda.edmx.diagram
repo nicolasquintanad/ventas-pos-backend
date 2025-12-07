@@ -15,7 +15,7 @@
         <EntityTypeShape EntityType="AMANDAModel.USUARIO" Width="1.5" PointX="3" PointY="15" IsExpanded="true" />
         <AssociationConnector Association="AMANDAModel.DETALLE_PROMOCION_PROMOCION_ID_PROMOCION_fk" ManuallyRouted="false" />
         <AssociationConnector Association="AMANDAModel.PACK_DETALLE_PACK_ID_PACK_fk" ManuallyRouted="false" />
-        <EntityTypeShape EntityType="AMANDAModel.PRODUCTO" Width="1.5" PointX="3" PointY="8.75" />
+        <EntityTypeShape EntityType="AMANDAModel.PRODUCTO" Width="1.5" PointX="3" PointY="8.75" IsExpanded="true" />
         <AssociationConnector Association="AMANDAModel.DETALLE_PROMOCION_PRODUCTO_ID_PRODUCTO_fk" />
         <AssociationConnector Association="AMANDAModel.PACK_DETALLE_PRODUCTO_ID_PRODUCTO_fk" />
         <AssociationConnector Association="AMANDAModel.PRODUCTO_TIPO_PRODUCTO_ID_TIPO_PRODUCTO_fk" />
@@ -43,6 +43,7 @@
         <AssociationConnector Association="AMANDAModel.PRODUCTO_ALERTA_STOCK_ID_ALERTA_fk" />
         <EntityTypeShape EntityType="AMANDAModel.PROVEEDOR" Width="1.5" PointX="7.75" PointY="1.25" />
         <AssociationConnector Association="AMANDAModel.ENTRADA_PRODUCTO_PROVEEDOR_ID_PROVEEDOR_fk" />
+        <AssociationConnector Association="AMANDAModel.PRODUCTO_PROVEEDOR_FK" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

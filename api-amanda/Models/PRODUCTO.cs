@@ -36,6 +36,7 @@ namespace api_amanda.Models
         public Nullable<bool> EXCENTO_IVA { get; set; }
         public Nullable<int> ID_TIPO_PRODUCTO { get; set; }
         public Nullable<int> ID_ALERTA { get; set; }
+        public Nullable<int> ID_PROVEEDOR { get; set; }
     
         public virtual ICollection<DETALLE_PROMOCION> DETALLE_PROMOCION { get; set; }
         public virtual ICollection<PACK_DETALLE> PACK_DETALLE { get; set; }
@@ -44,5 +45,6 @@ namespace api_amanda.Models
         public virtual ICollection<DETALLE_VENTA> DETALLE_VENTA { get; set; }
         public virtual ICollection<HISTORIAL_STOCK> HISTORIAL_STOCK { get; set; }
         public virtual ALERTA_STOCK ALERTA_STOCK { get; set; }
+        public virtual PROVEEDOR PROVEEDOR { get; set; }
     }
 }
