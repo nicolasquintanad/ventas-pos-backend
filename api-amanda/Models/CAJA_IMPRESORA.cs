@@ -12,20 +12,13 @@ namespace api_amanda.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class CAJA
+    public partial class CAJA_IMPRESORA
     {
-        public CAJA()
-        {
-            this.APERTURA_CIERRE = new HashSet<APERTURA_CIERRE>();
-            this.VENTA = new HashSet<VENTA>();
-            this.CAJA_IMPRESORA = new HashSet<CAJA_IMPRESORA>();
-        }
-    
+        public int ID_CAJA_IMPRESORA { get; set; }
         public int ID_CAJA { get; set; }
-        public string NOMBRE { get; set; }
+        public int ID_IMPRESORA { get; set; }
     
-        public virtual ICollection<APERTURA_CIERRE> APERTURA_CIERRE { get; set; }
-        public virtual ICollection<VENTA> VENTA { get; set; }
-        public virtual ICollection<CAJA_IMPRESORA> CAJA_IMPRESORA { get; set; }
+        public virtual CAJA CAJA { get; set; }
+        public virtual IMPRESORA IMPRESORA { get; set; }
     }
 }

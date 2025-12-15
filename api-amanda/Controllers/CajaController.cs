@@ -200,6 +200,7 @@ namespace api_amanda.Controllers
                     message = "Caja cerrada correctamente",
                     idAperturaCierre = apertura.ID_APERTURA_CIERRE,
                     caja = apertura.CAJA.NOMBRE,
+                    ID_CAJA= apertura.ID_CAJA,
                     fechaApertura = apertura.FECHA_APERTURA,
                     fechaCierre = apertura.FECHA_CIERRE,
                     montoInicial = apertura.MONTO_INICIAL,

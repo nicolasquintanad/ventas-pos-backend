@@ -249,6 +249,7 @@ namespace api_amanda.Controllers
                     venta.FECHA,
                     venta.TOTAL,
                     caja = venta.CAJA.NOMBRE,
+                    ID_CAJA= venta.ID_CAJA,
                     detalle = detalle
                 });
             }

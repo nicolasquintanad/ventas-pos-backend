@@ -37,6 +37,14 @@
           <Property Name="ID_CAJA" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="NOMBRE" Type="nvarchar" MaxLength="100" />
         </EntityType>
+        <EntityType Name="CAJA_IMPRESORA">
+          <Key>
+            <PropertyRef Name="ID_CAJA_IMPRESORA" />
+          </Key>
+          <Property Name="ID_CAJA_IMPRESORA" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ID_CAJA" Type="int" Nullable="false" />
+          <Property Name="ID_IMPRESORA" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="DETALLE_PROMOCION">
           <Key>
             <PropertyRef Name="ID_DETALLE_PROMOCION" />
@@ -94,6 +102,15 @@
           <Property Name="STOCK_NUEVO" Type="decimal" Precision="18" Scale="6" Nullable="false" />
           <Property Name="USUARIO" Type="nvarchar" MaxLength="100" />
           <Property Name="OBSERVACION" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="IMPRESORA">
+          <Key>
+            <PropertyRef Name="ID_IMPRESORA" />
+          </Key>
+          <Property Name="ID_IMPRESORA" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NOMBRE_WINDOWS" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="TIPO" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ACTIVA" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="PACK">
           <Key>
@@ -346,7 +363,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK__HISTORIAL__ID_PR__02FC7413">
+        <Association Name="FK__HISTORIAL__ID_PR__52593CB8">
           <End Role="PRODUCTO" Type="Self.PRODUCTO" Multiplicity="1" />
           <End Role="HISTORIAL_STOCK" Type="Self.HISTORIAL_STOCK" Multiplicity="*" />
           <ReferentialConstraint>
@@ -355,6 +372,30 @@
             </Principal>
             <Dependent Role="HISTORIAL_STOCK">
               <PropertyRef Name="ID_PRODUCTO" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CAJA_IMPRESORA_CAJA">
+          <End Role="CAJA" Type="Self.CAJA" Multiplicity="1" />
+          <End Role="CAJA_IMPRESORA" Type="Self.CAJA_IMPRESORA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CAJA">
+              <PropertyRef Name="ID_CAJA" />
+            </Principal>
+            <Dependent Role="CAJA_IMPRESORA">
+              <PropertyRef Name="ID_CAJA" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CAJA_IMPRESORA_IMPRESORA">
+          <End Role="IMPRESORA" Type="Self.IMPRESORA" Multiplicity="1" />
+          <End Role="CAJA_IMPRESORA" Type="Self.CAJA_IMPRESORA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="IMPRESORA">
+              <PropertyRef Name="ID_IMPRESORA" />
+            </Principal>
+            <Dependent Role="CAJA_IMPRESORA">
+              <PropertyRef Name="ID_IMPRESORA" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -494,10 +535,12 @@
           <EntitySet Name="ALERTA_STOCK" EntityType="Self.ALERTA_STOCK" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="APERTURA_CIERRE" EntityType="Self.APERTURA_CIERRE" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CAJA" EntityType="Self.CAJA" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CAJA_IMPRESORA" EntityType="Self.CAJA_IMPRESORA" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DETALLE_PROMOCION" EntityType="Self.DETALLE_PROMOCION" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DETALLE_VENTA" EntityType="Self.DETALLE_VENTA" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ENTRADA_PRODUCTO" EntityType="Self.ENTRADA_PRODUCTO" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="HISTORIAL_STOCK" EntityType="Self.HISTORIAL_STOCK" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="IMPRESORA" EntityType="Self.IMPRESORA" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PACK" EntityType="Self.PACK" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PACK_DETALLE" EntityType="Self.PACK_DETALLE" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PRODUCTO" EntityType="Self.PRODUCTO" Schema="dbo" store:Type="Tables" />
@@ -548,9 +591,17 @@
             <End Role="USUARIO" EntitySet="USUARIO" />
             <End Role="ENTRADA_PRODUCTO" EntitySet="ENTRADA_PRODUCTO" />
           </AssociationSet>
-          <AssociationSet Name="FK__HISTORIAL__ID_PR__02FC7413" Association="Self.FK__HISTORIAL__ID_PR__02FC7413">
+          <AssociationSet Name="FK__HISTORIAL__ID_PR__52593CB8" Association="Self.FK__HISTORIAL__ID_PR__52593CB8">
             <End Role="PRODUCTO" EntitySet="PRODUCTO" />
             <End Role="HISTORIAL_STOCK" EntitySet="HISTORIAL_STOCK" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CAJA_IMPRESORA_CAJA" Association="Self.FK_CAJA_IMPRESORA_CAJA">
+            <End Role="CAJA" EntitySet="CAJA" />
+            <End Role="CAJA_IMPRESORA" EntitySet="CAJA_IMPRESORA" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CAJA_IMPRESORA_IMPRESORA" Association="Self.FK_CAJA_IMPRESORA_IMPRESORA">
+            <End Role="IMPRESORA" EntitySet="IMPRESORA" />
+            <End Role="CAJA_IMPRESORA" EntitySet="CAJA_IMPRESORA" />
           </AssociationSet>
           <AssociationSet Name="PACK_DETALLE_PACK_ID_PACK_fk" Association="Self.PACK_DETALLE_PACK_ID_PACK_fk">
             <End Role="PACK" EntitySet="PACK" />
@@ -609,6 +660,7 @@
           <Property Name="NOMBRE" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="APERTURA_CIERRE" Relationship="AMANDAModel.APERTURA_CIERRE_CAJA_ID_CAJA_fk" FromRole="CAJA" ToRole="APERTURA_CIERRE" />
           <NavigationProperty Name="VENTA" Relationship="AMANDAModel.VENTA_CAJA_ID_CAJA_fk" FromRole="CAJA" ToRole="VENTA" />
+          <NavigationProperty Name="CAJA_IMPRESORA" Relationship="AMANDAModel.FK_CAJA_IMPRESORA_CAJA" FromRole="CAJA" ToRole="CAJA_IMPRESORA" />
         </EntityType>
         <EntityType Name="DETALLE_PROMOCION">
           <Key>
@@ -833,6 +885,16 @@
           <AssociationSet Name="PRODUCTO_PROVEEDOR_FK" Association="AMANDAModel.PRODUCTO_PROVEEDOR_FK">
             <End Role="PROVEEDOR" EntitySet="PROVEEDOR" />
             <End Role="PRODUCTO" EntitySet="PRODUCTO" />
+          </AssociationSet>
+          <EntitySet Name="CAJA_IMPRESORA" EntityType="AMANDAModel.CAJA_IMPRESORA" />
+          <EntitySet Name="IMPRESORA" EntityType="AMANDAModel.IMPRESORA" />
+          <AssociationSet Name="FK_CAJA_IMPRESORA_CAJA" Association="AMANDAModel.FK_CAJA_IMPRESORA_CAJA">
+            <End Role="CAJA" EntitySet="CAJA" />
+            <End Role="CAJA_IMPRESORA" EntitySet="CAJA_IMPRESORA" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CAJA_IMPRESORA_IMPRESORA" Association="AMANDAModel.FK_CAJA_IMPRESORA_IMPRESORA">
+            <End Role="IMPRESORA" EntitySet="IMPRESORA" />
+            <End Role="CAJA_IMPRESORA" EntitySet="CAJA_IMPRESORA" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="PRODUCTO">
@@ -1237,6 +1299,50 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="CAJA_IMPRESORA">
+          <Key>
+            <PropertyRef Name="ID_CAJA_IMPRESORA" />
+          </Key>
+          <Property Name="ID_CAJA_IMPRESORA" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ID_CAJA" Type="Int32" Nullable="false" />
+          <Property Name="ID_IMPRESORA" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="CAJA" Relationship="AMANDAModel.FK_CAJA_IMPRESORA_CAJA" FromRole="CAJA_IMPRESORA" ToRole="CAJA" />
+          <NavigationProperty Name="IMPRESORA" Relationship="AMANDAModel.FK_CAJA_IMPRESORA_IMPRESORA" FromRole="CAJA_IMPRESORA" ToRole="IMPRESORA" />
+        </EntityType>
+        <EntityType Name="IMPRESORA">
+          <Key>
+            <PropertyRef Name="ID_IMPRESORA" />
+          </Key>
+          <Property Name="ID_IMPRESORA" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NOMBRE_WINDOWS" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="TIPO" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ACTIVA" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="CAJA_IMPRESORA" Relationship="AMANDAModel.FK_CAJA_IMPRESORA_IMPRESORA" FromRole="IMPRESORA" ToRole="CAJA_IMPRESORA" />
+        </EntityType>
+        <Association Name="FK_CAJA_IMPRESORA_CAJA">
+          <End Type="AMANDAModel.CAJA" Role="CAJA" Multiplicity="1" />
+          <End Type="AMANDAModel.CAJA_IMPRESORA" Role="CAJA_IMPRESORA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CAJA">
+              <PropertyRef Name="ID_CAJA" />
+            </Principal>
+            <Dependent Role="CAJA_IMPRESORA">
+              <PropertyRef Name="ID_CAJA" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CAJA_IMPRESORA_IMPRESORA">
+          <End Type="AMANDAModel.IMPRESORA" Role="IMPRESORA" Multiplicity="1" />
+          <End Type="AMANDAModel.CAJA_IMPRESORA" Role="CAJA_IMPRESORA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="IMPRESORA">
+              <PropertyRef Name="ID_IMPRESORA" />
+            </Principal>
+            <Dependent Role="CAJA_IMPRESORA">
+              <PropertyRef Name="ID_IMPRESORA" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1481,7 +1587,26 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-        </EntityContainerMapping>
+          <EntitySetMapping Name="CAJA_IMPRESORA">
+            <EntityTypeMapping TypeName="AMANDAModel.CAJA_IMPRESORA">
+              <MappingFragment StoreEntitySet="CAJA_IMPRESORA">
+                <ScalarProperty Name="ID_IMPRESORA" ColumnName="ID_IMPRESORA" />
+                <ScalarProperty Name="ID_CAJA" ColumnName="ID_CAJA" />
+                <ScalarProperty Name="ID_CAJA_IMPRESORA" ColumnName="ID_CAJA_IMPRESORA" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="IMPRESORA">
+            <EntityTypeMapping TypeName="AMANDAModel.IMPRESORA">
+              <MappingFragment StoreEntitySet="IMPRESORA">
+                <ScalarProperty Name="ACTIVA" ColumnName="ACTIVA" />
+                <ScalarProperty Name="TIPO" ColumnName="TIPO" />
+                <ScalarProperty Name="NOMBRE_WINDOWS" ColumnName="NOMBRE_WINDOWS" />
+                <ScalarProperty Name="ID_IMPRESORA" ColumnName="ID_IMPRESORA" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
   </edmx:Runtime>

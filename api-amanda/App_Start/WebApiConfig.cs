@@ -11,13 +11,15 @@ namespace api_amanda
     {
         public static void Register(HttpConfiguration config)
         {
-            // Habilitar CORS para tu frontend
+            // Habilitar CORS para ambos orígenes
             var cors = new EnableCorsAttribute(
-                "http://localhost:5173", // tu frontend
-                "*",                     // headers permitidos
-                "*"                      // métodos permitidos
+                "http://localhost:5173,http://192.168.1.50:8081,https://192.168.1.50:8082,http://192.168.1.60:8081",
+                "*",
+                "*"
             );
-            config.EnableCors(new EnableCorsAttribute("*", "*", "*"));
+
+            config.EnableCors(cors);
+
             // Rutas
             config.MapHttpAttributeRoutes();
 

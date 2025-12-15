@@ -11,7 +11,7 @@ using System.Web.Http.Cors;
 namespace api_amanda.Controllers
 {
     [RoutePrefix("products")]
-    [EnableCors(origins: "http://localhost:5173", headers: "*", methods: "*")]
+    //[EnableCors(origins: "http://localhost:5173", headers: "*", methods: "*")]
     public class ProductoController : ApiController
     {
         [HttpGet]
@@ -233,6 +233,65 @@ namespace api_amanda.Controllers
 
                 return Ok(criticos);
             }
+        }
+        //[HttpGet]
+        //[Route("precio/{sku}")]
+        //public IHttpActionResult GetPrecio(string sku)
+        //{
+        //    using (var db = new AMANDAEntities())
+        //    {
+        //        var prod = db.PRODUCTO
+        //                     .Where(p => p.SKU == sku)
+        //                     .Select(p => new { p.NOMBRE, p.PRECIO })
+        //                     .FirstOrDefault();
+
+        //        if (prod == null)
+        //            return NotFound();
+
+        //        return Ok(prod);
+        //    }
+        //}
+        [HttpGet]
+        [Route("precio")]
+        public IHttpActionResult GetPrecio(string sku)
+        {
+            using (var db = new AMANDAEntities())
+            {
+                RESPUESTA resp = new RESPUESTA();
+                var p = db.PRODUCTO.FirstOrDefault(x => x.SKU == sku);
+
+                if (p != null)
+                {
+                    resp.sku = p.SKU;
+                    resp.nombre = p.NOMBRE;
+                    resp.precio = p.PRECIO;
+                    resp.tipo = "Otro";
+                    resp.stock = p.STOCK;
+                    return Ok(resp);
+                }
+
+                // Intentar PACK
+                var pk = db.PACK.FirstOrDefault(x => x.SKU_PACK == sku);
+                if (pk != null)
+                {
+                    resp.sku = pk.SKU_PACK;
+                    resp.nombre = pk.NOMBRE_PACK;
+                    resp.precio = pk.PRECIO_PACK;
+                    resp.tipo = "PACK";
+                    return Ok(resp);
+                }
+
+                return NotFound();
+            }
+        }
+
+        public class RESPUESTA
+        {
+            public string sku { get; set; }
+            public string nombre { get; set; }
+            public int? precio { get; set; }
+            public string tipo { get; set; }
+            public decimal? stock { get; set; }
         }
     }
 }

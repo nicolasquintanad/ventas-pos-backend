@@ -44,6 +44,10 @@
         <EntityTypeShape EntityType="AMANDAModel.PROVEEDOR" Width="1.5" PointX="7.75" PointY="1.25" />
         <AssociationConnector Association="AMANDAModel.ENTRADA_PRODUCTO_PROVEEDOR_ID_PROVEEDOR_fk" />
         <AssociationConnector Association="AMANDAModel.PRODUCTO_PROVEEDOR_FK" />
+        <EntityTypeShape EntityType="AMANDAModel.CAJA_IMPRESORA" Width="1.5" PointX="6" PointY="21" />
+        <EntityTypeShape EntityType="AMANDAModel.IMPRESORA" Width="1.5" PointX="3.75" PointY="29" />
+        <AssociationConnector Association="AMANDAModel.FK_CAJA_IMPRESORA_CAJA" />
+        <AssociationConnector Association="AMANDAModel.FK_CAJA_IMPRESORA_IMPRESORA" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
