@@ -1,3 +1,4 @@
+using api_amanda.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +9,7 @@ using System.Web.Optimization;
 using System.Web.Routing;
 using System.Web.Security;
 using System.Web.SessionState;
+using Unity;
 
 namespace api_amanda
 {
@@ -20,6 +22,14 @@ namespace api_amanda
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+
+            var container = new UnityContainer();
+            container.RegisterType<IImpresionService, ImpresionService>();
+
+            // Usar el contenedor con Web API
+            GlobalConfiguration.Configuration.DependencyResolver = new UnityResolver(container);
+
         }
+        
     }
 }

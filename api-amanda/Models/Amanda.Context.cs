@@ -42,5 +42,7 @@ namespace api_amanda.Models
         public DbSet<VENTA> VENTA { get; set; }
         public DbSet<ALERTA_STOCK> ALERTA_STOCK { get; set; }
         public DbSet<PROVEEDOR> PROVEEDOR { get; set; }
+        public DbSet<CAJA_IMPRESORA> CAJA_IMPRESORA { get; set; }
+        public DbSet<IMPRESORA> IMPRESORA { get; set; }
     }
 }
