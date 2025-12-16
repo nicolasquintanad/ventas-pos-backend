@@ -349,15 +349,17 @@ namespace api_amanda.Controllers
         // MÉTODO PRIVADO: usa la misma lógica que ya tienes para armar el reporte
         // =========================================================================
         private List<ReporteVentaDTO> ObtenerDetalleVentas(
-            AMANDAEntities db,
-            DateTime? inicio,
-            DateTime? fin,
-            int? idUsuario,
-            int? idCaja,
-            int? idProveedor,
-            int? idProducto)
+    AMANDAEntities db,
+    DateTime? inicio,
+    DateTime? fin,
+    int? idUsuario,
+    int? idCaja,
+    int? idProveedor,
+    int? idProducto)
         {
-            // 0) Base con IdPack calculado por SKU
+            // -------------------------------------------------
+            // 0) Base: detalle de venta + IdPack por SKU
+            // -------------------------------------------------
             var baseQuery = db.DETALLE_VENTA
                 .Select(d => new
                 {
@@ -368,37 +370,47 @@ namespace api_amanda.Controllers
                         .FirstOrDefault()
                 });
 
-            // Filtros base
+            // -------------------------------------------------
+            // 1) Filtros base
+            // -------------------------------------------------
             if (inicio.HasValue)
-                baseQuery = baseQuery.Where(x => x.Det.FECHA_CREACION >= inicio);
-            if (fin.HasValue)
-                baseQuery = baseQuery.Where(x => x.Det.FECHA_CREACION <= fin);
-            if (idUsuario.HasValue)
-                baseQuery = baseQuery.Where(x => x.Det.USUARIO_VENTA == idUsuario);
-            if (idCaja.HasValue)
-                baseQuery = baseQuery.Where(x => x.Det.VENTA.ID_CAJA == idCaja);
+                baseQuery = baseQuery.Where(x => x.Det.FECHA_CREACION >= inicio.Value);
 
-            // Filtro proveedor (si NO hay producto)
+            if (fin.HasValue)
+                baseQuery = baseQuery.Where(x => x.Det.FECHA_CREACION <= fin.Value);
+
+            if (idUsuario.HasValue)
+                baseQuery = baseQuery.Where(x => x.Det.USUARIO_VENTA == idUsuario.Value);
+
+            if (idCaja.HasValue)
+                baseQuery = baseQuery.Where(x => x.Det.VENTA.ID_CAJA == idCaja.Value);
+
+            // -------------------------------------------------
+            // 2) Filtro por proveedor (REGLA CORRECTA)
+            //    👉 Usa PRODUCTO.ID_PROVEEDOR
+            // -------------------------------------------------
             if (!idProducto.HasValue && idProveedor.HasValue)
             {
                 baseQuery = baseQuery.Where(x =>
-                    // Venta directa
+                    // Producto directo
                     (x.Det.ID_PRODUCTO != null &&
-                     x.Det.PRODUCTO.ENTRADA_PRODUCTO.Any(e => e.ID_PROVEEDOR == idProveedor))
+                     x.Det.PRODUCTO.ID_PROVEEDOR == idProveedor.Value)
 
                     ||
 
-                    // Venta pack → algún producto interno del pack tiene ese proveedor
+                    // Producto dentro de pack
                     (x.Det.ID_PRODUCTO == null &&
                         db.PACK_DETALLE.Any(pd =>
                             pd.ID_PACK == x.IdPack &&
-                            pd.PRODUCTO.ENTRADA_PRODUCTO.Any(e => e.ID_PROVEEDOR == idProveedor)
+                            pd.PRODUCTO.ID_PROVEEDOR == idProveedor.Value
                         )
                     )
                 );
             }
 
-            // Filtro producto (directo o dentro de pack)
+            // -------------------------------------------------
+            // 3) Filtro por producto (directo o dentro de pack)
+            // -------------------------------------------------
             if (idProducto.HasValue)
             {
                 baseQuery = baseQuery.Where(x =>
@@ -414,7 +426,9 @@ namespace api_amanda.Controllers
                 );
             }
 
-            // Detalle normal
+            // -------------------------------------------------
+            // 4) Detalle de productos directos
+            // -------------------------------------------------
             var detalleProductos =
                 baseQuery
                 .Where(x => x.Det.ID_PRODUCTO != null)
@@ -424,62 +438,93 @@ namespace api_amanda.Controllers
                     Usuario = x.Det.VENTA.USUARIO.NOMBRE,
                     Caja = x.Det.VENTA.CAJA.NOMBRE,
                     Producto = x.Det.PRODUCTO.NOMBRE,
-                    Proveedor = x.Det.PRODUCTO.ENTRADA_PRODUCTO
-                        .Select(e => e.PROVEEDOR.NOMBRE)
-                        .FirstOrDefault(),
+
+            // ⭐ Proveedor correcto (principal → fallback)
+            Proveedor =
+                        x.Det.PRODUCTO.PROVEEDOR.NOMBRE
+                        ?? x.Det.PRODUCTO.ENTRADA_PRODUCTO
+                            .Select(e => e.PROVEEDOR.NOMBRE)
+                            .FirstOrDefault()
+                        ?? "Sin proveedor",
+
                     Cantidad = (decimal)x.Det.CANTIDAD,
                     PrecioUnitario = (decimal)x.Det.PRECIO_UNITARIO,
                     SubTotal = (decimal)x.Det.SUBTOTAL
                 });
 
-            // Detalle desde packs
+            // -------------------------------------------------
+            // 5) Detalle de productos desde packs
+            // -------------------------------------------------
             var detallePackProductos =
                 baseQuery
                 .Where(x => x.Det.ID_PRODUCTO == null)
                 .SelectMany(x =>
                     db.PACK_DETALLE
-                    .Where(det =>
-                        det.ID_PACK == x.IdPack &&
-                        (!idProducto.HasValue || det.ID_PRODUCTO == idProducto.Value) &&
-                        (!idProveedor.HasValue ||
-                            det.PRODUCTO.ENTRADA_PRODUCTO.Any(p => p.ID_PROVEEDOR == idProveedor.Value)
+                        .Where(det =>
+                            det.ID_PACK == x.IdPack &&
+                            (!idProducto.HasValue || det.ID_PRODUCTO == idProducto.Value) &&
+                            (!idProveedor.HasValue ||
+                                det.PRODUCTO.ID_PROVEEDOR == idProveedor.Value)
                         )
-                    )
-                    .Select(det => new ReporteVentaDTO
-                    {
-                        FECHA = (DateTime)x.Det.VENTA.FECHA,
-                        Usuario = x.Det.VENTA.USUARIO.NOMBRE,
-                        Caja = x.Det.VENTA.CAJA.NOMBRE,
-                        Producto = det.PRODUCTO.NOMBRE,
-                        Proveedor = det.PRODUCTO.ENTRADA_PRODUCTO
-                            .Select(e => e.PROVEEDOR.NOMBRE)
-                            .FirstOrDefault(),
-                        Cantidad = (decimal)det.CANTIDAD_PRODUCTO * (decimal)x.Det.CANTIDAD,
-                        PrecioUnitario = (decimal)det.PRODUCTO.PRECIO,
-                        SubTotal = (decimal)det.PRODUCTO.PRECIO *
-                                   ((decimal)det.CANTIDAD_PRODUCTO * (decimal)x.Det.CANTIDAD)
-                    })
+                        .Select(det => new ReporteVentaDTO
+                        {
+                            FECHA = (DateTime)x.Det.VENTA.FECHA,
+                            Usuario = x.Det.VENTA.USUARIO.NOMBRE,
+                            Caja = x.Det.VENTA.CAJA.NOMBRE,
+                            Producto = det.PRODUCTO.NOMBRE,
+
+                    // ⭐ Proveedor correcto (principal → fallback)
+                    Proveedor =
+                                det.PRODUCTO.PROVEEDOR.NOMBRE
+                                ?? det.PRODUCTO.ENTRADA_PRODUCTO
+                                    .Select(e => e.PROVEEDOR.NOMBRE)
+                                    .FirstOrDefault()
+                                ?? "Sin proveedor",
+
+                            Cantidad =
+                                (decimal)det.CANTIDAD_PRODUCTO *
+                                (decimal)x.Det.CANTIDAD,
+
+                            PrecioUnitario = (decimal)det.PRODUCTO.PRECIO,
+
+                            SubTotal =
+                                (decimal)det.PRODUCTO.PRECIO *
+                                ((decimal)det.CANTIDAD_PRODUCTO *
+                                 (decimal)x.Det.CANTIDAD)
+                        })
                 );
 
-            var resultado = detalleProductos
-    .Union(detallePackProductos)
-    .GroupBy(r => new { r.Producto, r.Proveedor, r.PrecioUnitario, r.Caja, r.Usuario })
-    .Select(g => new ReporteVentaDTO
-    {
-        FECHA = g.Min(x => x.FECHA),
-        Usuario = g.Key.Usuario,
-        Caja = g.Key.Caja,
-        Producto = g.Key.Producto,
-        Proveedor = g.Key.Proveedor,
-        Cantidad = g.Sum(x => x.Cantidad),
-        PrecioUnitario = g.Key.PrecioUnitario,
-        SubTotal = g.Sum(x => x.SubTotal)
-    })
-    .OrderBy(r => r.FECHA)
-    .ToList();
+            // -------------------------------------------------
+            // 6) Unión + agrupación final
+            // -------------------------------------------------
+            var resultado =
+                detalleProductos
+                .Union(detallePackProductos)
+                .GroupBy(r => new
+                {
+                    r.Producto,
+                    r.Proveedor,
+                    r.PrecioUnitario,
+                    r.Caja,
+                    r.Usuario
+                })
+                .Select(g => new ReporteVentaDTO
+                {
+                    FECHA = g.Min(x => x.FECHA),
+                    Usuario = g.Key.Usuario,
+                    Caja = g.Key.Caja,
+                    Producto = g.Key.Producto,
+                    Proveedor = g.Key.Proveedor,
+                    Cantidad = g.Sum(x => x.Cantidad),
+                    PrecioUnitario = g.Key.PrecioUnitario,
+                    SubTotal = g.Sum(x => x.SubTotal)
+                })
+                .OrderBy(r => r.FECHA)
+                .ToList();
 
             return resultado;
         }
+
         [HttpGet]
         [Route("productos")]
         public IHttpActionResult GetReporteProductos(

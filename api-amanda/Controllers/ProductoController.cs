@@ -284,6 +284,226 @@ namespace api_amanda.Controllers
                 return NotFound();
             }
         }
+        [HttpGet]
+        [Route("search")]
+        public IHttpActionResult GetProductosFiltrados(string search = null, int? tipoId = null, int? proveedorId = null, int page = 1, int pageSize = 10, string sortField = "NOMBRE", string sortOrder = "asc")
+        {
+            using (var db = new AMANDAEntities())
+            {
+
+                if (page <= 0) page = 1;
+                if (pageSize <= 0 || pageSize > 100) pageSize = 10;
+
+                var query = db.PRODUCTO.AsQueryable();
+
+                // 🔍 BÚSQUEDA GLOBAL
+                if (!string.IsNullOrEmpty(search))
+                {
+                    query = query.Where(p =>
+                        p.SKU.Contains(search) ||
+                        p.NOMBRE.Contains(search) ||
+                        p.DESCRIPCION.Contains(search) ||
+                        p.PROVEEDOR.NOMBRE.Contains(search) ||
+                        p.TIPO_PRODUCTO.NOMBRE.Contains(search)
+                    );
+                }
+
+                // 🏷️ FILTRO TIPO PRODUCTO
+                if (tipoId.HasValue)
+                    query = query.Where(p => p.ID_TIPO_PRODUCTO == tipoId.Value);
+
+                // 🚚 FILTRO PROVEEDOR
+                if (proveedorId.HasValue)
+                    query = query.Where(p => p.ID_PROVEEDOR == proveedorId.Value);
+
+                // 📊 TOTAL (para paginación)
+                var total = query.Count();
+
+                switch (sortField)
+                {
+                    case "PRECIO":
+                        query = sortOrder == "desc"
+                            ? query.OrderByDescending(p => p.PRECIO)
+                            : query.OrderBy(p => p.PRECIO);
+                        break;
+
+                    case "STOCK":
+                        query = sortOrder == "desc"
+                            ? query.OrderByDescending(p => p.STOCK)
+                            : query.OrderBy(p => p.STOCK);
+                        break;
+
+                    case "SKU":
+                        query = sortOrder == "desc"
+                            ? query.OrderByDescending(p => p.SKU)
+                            : query.OrderBy(p => p.SKU);
+                        break;
+
+                    default: // NOMBRE
+                        query = sortOrder == "desc"
+                            ? query.OrderByDescending(p => p.NOMBRE)
+                            : query.OrderBy(p => p.NOMBRE);
+                        break;
+                }
+                // 📄 PAGINACIÓN REAL
+                var data = query
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize)
+                    .Select(p => new
+                    {
+                        id = p.ID_PRODUCTO,
+                        sku = p.SKU,
+                        name = p.NOMBRE,
+                        description = p.DESCRIPCION,
+                        priceUnit = p.PRECIO,
+                        stockUnits = p.STOCK,
+                        exempt = p.EXCENTO_IVA,
+                        typeId = p.ID_TIPO_PRODUCTO,
+                        typeName = p.TIPO_PRODUCTO.NOMBRE,
+                        alertaNombre = p.ALERTA_STOCK.NOMBRE,
+                        ID_ALERTA = p.ID_ALERTA,
+                        proveedorNombre = p.PROVEEDOR.NOMBRE,
+                        ID_PROVEEDOR = p.ID_PROVEEDOR
+                    })
+                    .ToList();
+
+                return Ok(new
+                {
+                    page,
+                    pageSize,
+                    total,
+                    data
+                });
+            }
+        }
+        [HttpGet]
+        [Route("export")]
+        public HttpResponseMessage ExportarProductosExcel(
+    string search = null,
+    int? tipoId = null,
+    int? proveedorId = null,
+    string sortField = "NOMBRE",
+    string sortOrder = "asc"
+)
+        {
+            using (var db = new AMANDAEntities())
+            {
+                var query = db.PRODUCTO.AsQueryable();
+
+                // 🔍 filtros
+                if (!string.IsNullOrEmpty(search))
+                {
+                    query = query.Where(p =>
+                        p.SKU.Contains(search) ||
+                        p.NOMBRE.Contains(search) ||
+                        p.DESCRIPCION.Contains(search) ||
+                        p.PROVEEDOR.NOMBRE.Contains(search) ||
+                        p.TIPO_PRODUCTO.NOMBRE.Contains(search)
+                    );
+                }
+
+                if (tipoId.HasValue)
+                    query = query.Where(p => p.ID_TIPO_PRODUCTO == tipoId);
+
+                if (proveedorId.HasValue)
+                    query = query.Where(p => p.ID_PROVEEDOR == proveedorId);
+
+                // 🔽 ordenamiento
+                switch (sortField)
+                {
+                    case "PRECIO":
+                        query = sortOrder == "desc"
+                            ? query.OrderByDescending(p => p.PRECIO)
+                            : query.OrderBy(p => p.PRECIO);
+                        break;
+
+                    case "STOCK":
+                        query = sortOrder == "desc"
+                            ? query.OrderByDescending(p => p.STOCK)
+                            : query.OrderBy(p => p.STOCK);
+                        break;
+
+                    case "SKU":
+                        query = sortOrder == "desc"
+                            ? query.OrderByDescending(p => p.SKU)
+                            : query.OrderBy(p => p.SKU);
+                        break;
+
+                    default:
+                        query = sortOrder == "desc"
+                            ? query.OrderByDescending(p => p.NOMBRE)
+                            : query.OrderBy(p => p.NOMBRE);
+                        break;
+                }
+
+                var data = query.Select(p => new
+                {
+                    p.SKU,
+                    p.NOMBRE,
+                    p.PRECIO,
+                    p.STOCK,
+                    Tipo = p.TIPO_PRODUCTO.NOMBRE,
+                    Proveedor = p.PROVEEDOR.NOMBRE,
+                    ExentoIVA = (bool)p.EXCENTO_IVA ? "Sí" : "No",
+                    Alerta = p.ALERTA_STOCK.NOMBRE
+                }).ToList();
+
+                using (var workbook = new ClosedXML.Excel.XLWorkbook())
+                {
+                    var ws = workbook.Worksheets.Add("Productos");
+
+                    // Cabeceras
+                    ws.Cell(1, 1).Value = "SKU";
+                    ws.Cell(1, 2).Value = "Nombre";
+                    ws.Cell(1, 3).Value = "Precio";
+                    ws.Cell(1, 4).Value = "Stock";
+                    ws.Cell(1, 5).Value = "Tipo";
+                    ws.Cell(1, 6).Value = "Proveedor";
+                    ws.Cell(1, 7).Value = "Exento IVA";
+                    ws.Cell(1, 8).Value = "Alerta";
+
+                    ws.Row(1).Style.Font.Bold = true;
+
+                    int row = 2;
+                    foreach (var p in data)
+                    {
+                        ws.Cell(row, 1).Value = p.SKU;
+                        ws.Cell(row, 2).Value = p.NOMBRE;
+                        ws.Cell(row, 3).Value = p.PRECIO;
+                        ws.Cell(row, 4).Value = p.STOCK;
+                        ws.Cell(row, 5).Value = p.Tipo;
+                        ws.Cell(row, 6).Value = p.Proveedor;
+                        ws.Cell(row, 7).Value = p.ExentoIVA;
+                        ws.Cell(row, 8).Value = p.Alerta;
+                        row++;
+                    }
+
+                    ws.Columns().AdjustToContents();
+
+                    var stream = new System.IO.MemoryStream();
+                    workbook.SaveAs(stream);
+                    stream.Position = 0;
+
+                    var result = new HttpResponseMessage(HttpStatusCode.OK)
+                    {
+                        Content = new ByteArrayContent(stream.ToArray())
+                    };
+
+                    result.Content.Headers.ContentDisposition =
+                        new System.Net.Http.Headers.ContentDispositionHeaderValue("attachment")
+                        {
+                            FileName = "Productos.xlsx"
+                        };
+
+                    result.Content.Headers.ContentType =
+                        new System.Net.Http.Headers.MediaTypeHeaderValue(
+                            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                        );
+
+                    return result;
+                }
+            }
+        }
 
         public class RESPUESTA
         {
