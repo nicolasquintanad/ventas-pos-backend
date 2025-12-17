@@ -504,6 +504,54 @@ namespace api_amanda.Controllers
                 }
             }
         }
+        [HttpGet]
+        [Route("suggest")]
+        public IHttpActionResult SugerirProductos(string term)
+        {
+            if (string.IsNullOrWhiteSpace(term) || term.Length < 3)
+                return Ok(new List<object>());
+
+            using (var db = new AMANDAEntities())
+            {
+                var productos = db.PRODUCTO
+                    .Where(p =>
+                        p.NOMBRE.Contains(term) ||
+                        p.SKU.Contains(term)
+                    )
+                    .OrderBy(p => p.NOMBRE)
+                    .Take(15)
+                    .Select(p => new
+                    {
+                        tipo = "producto",
+                        id = p.ID_PRODUCTO,
+                        sku = p.SKU,
+                        nombre = p.NOMBRE,
+                        precio = p.PRECIO,
+                        exento = p.EXCENTO_IVA,
+                        typeName = p.TIPO_PRODUCTO.NOMBRE
+                    });
+
+                var packs = db.PACK
+                    .Where(p =>
+                        p.NOMBRE_PACK.Contains(term) ||
+                        p.SKU_PACK.Contains(term)
+                    )
+                    .OrderBy(p => p.NOMBRE_PACK)
+                    .Take(10)
+                    .Select(p => new
+                    {
+                        tipo = "pack",
+                        id = p.ID_PACK,
+                        sku = p.SKU_PACK,
+                        nombre = p.NOMBRE_PACK,
+                        precio = p.PRECIO_PACK,
+                        exento = p.EXCENTO_IVA,
+                        typeName = "pack"
+                    });
+
+                return Ok(productos.Concat(packs).Take(20).ToList());
+            }
+        }
 
         public class RESPUESTA
         {
